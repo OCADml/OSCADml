@@ -511,6 +511,32 @@ val import3 : ?convexity:int -> string -> d3
     here}. *)
 val surface : ?convexity:int -> ?center:bool -> ?invert:bool -> string -> d3
 
+(** {1 Lifting from OCADml} *)
+
+(** [of_path2 ?convexity path]
+
+    Create a 2d shape enclosed by [path] by way of {!polygon}. *)
+val of_path2 : ?convexity:int -> Path2.t -> d2
+
+(** [of_poly2 ?convexity poly]
+
+    Create a 2d shape with the outer and inner (hole) paths of [poly] by way of
+    {!polygon}. *)
+val of_poly2 : ?convexity:int -> Poly2.t -> d2
+
+(** [of_poly3 ?convexity poly]
+
+    Create an unclosed (non-manifold) 3d shape/face with the outer and inner (hole)
+    paths the (assumed) planar [poly]. This will appear in preview, but will not
+    render. *)
+val of_poly3 : ?convexity:int -> Poly3.t -> d3
+
+(** [of_mesh ?convexity mesh]
+
+    Create a 3d shape from the points and faces of [mesh] by way of
+    {!polyhedron}. *)
+val of_mesh : ?convexity:int -> Mesh.t -> d3
+
 (** {1 Output} *)
 
 (** [to_string t]

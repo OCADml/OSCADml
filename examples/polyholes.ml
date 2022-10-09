@@ -1,4 +1,6 @@
 (** {0 Polygons with holes} *)
+
+open OCADml
 open OSCADml
 
 let () =
@@ -12,10 +14,10 @@ let () =
     in
     let poly =
       Mesh.extrude ~merge:true ~height:1. shape
-      |> Mesh.to_scad
+      |> Scad.of_mesh
       |> Scad.color ~alpha:0.5 Color.Silver
     and reference =
-      Poly2.to_scad shape
+      Scad.of_poly2 shape
       |> Scad.extrude ~height:1.
       |> Scad.translate (v3 0. 0. (-3.))
       |> Scad.color ~alpha:0.5 Color.BlueViolet

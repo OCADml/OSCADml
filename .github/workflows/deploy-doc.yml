@@ -1,0 +1,39 @@
+name: Deploy odoc
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-doc:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Use OCaml 4.13.x
+        uses: ocaml/setup-ocaml@v2
+        with:
+          ocaml-compiler: 4.13.x
+
+      - name: Install xvfb and openscad
+        run: |
+          sudo apt-get update
+          sudo apt-get install xvfb
+          sudo apt-get install openscad
+
+      - run: opam install . --deps-only --with-doc
+
+      - name: Build docs (with help of dummy X server for snapshots)
+        run: |
+          opam exec -- dune build @examples
+          export DISPLAY=:99
+          sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 &
+          opam exec -- dune build @doc
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ github.token }}
+          publish_dir: _build/default/_doc/_html

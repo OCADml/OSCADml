@@ -1,3 +1,4 @@
+open OCADml
 open OSCADml
 
 let square = Scad.square ~center:true (v2 10. 10.)

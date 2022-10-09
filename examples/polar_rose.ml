@@ -1,5 +1,6 @@
 (** {0 Polar Rose} *)
 
+open OCADml
 open OSCADml
 
 (** Define a function that takes a radius [r] and angle [a], and returns a z
@@ -23,7 +24,7 @@ let rose ~r ~a =
 let mesh = Mesh.polar_plot ~r_step:0.4 ~max_r:22. rose
 
 (** Convert our mesh into an OpenSCAD polyhedron and output to file. *)
-let () = Scad.to_file "polar_rose.scad" (Mesh.to_scad mesh)
+let () = Scad.to_file "polar_rose.scad" (Scad.of_mesh mesh)
 
 (** {%html:
     <p style="text-align:center;">

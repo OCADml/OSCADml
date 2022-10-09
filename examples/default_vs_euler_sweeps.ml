@@ -1,4 +1,6 @@
 (** {0 Path transfomations (default vs euler)} *)
+
+open OCADml
 open OSCADml
 
 (** We'll use a simple elbow shape for our sweeps so that its orientation is
@@ -18,13 +20,13 @@ let paths =
   p (v3 0. 0. d) :: p (v3 0. 0. (-.d)) :: List.concat_map f (List.init 8 Float.of_int)
 
 (** Original orientation of the shape [poly] for reference. *)
-let flat = Scad.extrude ~height:1. (Poly2.to_scad poly)
+let flat = Scad.extrude ~height:1. (Scad.of_poly2 poly)
 
 (** Extrude [poly] along each of the generated [paths], using either default/standard,
-    or euler path transformations (see {{!OSCADml.Path3.to_transforms} [Path3.to_transforms]}). *)
+    or euler path transformations (see {{!OCADml.Path3.to_transforms} [Path3.to_transforms]}). *)
 let starburst ~euler =
   let scad =
-    let f path = Mesh.(to_scad @@ path_extrude ~euler ~path poly) in
+    let f path = Scad.of_mesh @@ Mesh.path_extrude ~euler ~path poly in
     Scad.union @@ (flat :: List.map f paths)
   and name =
     Printf.sprintf "sweep_starburst_%s.scad" (if euler then "euler" else "default")
@@ -55,7 +57,7 @@ let () = starburst ~euler:true (* euler path transformations *)
 
 (** A conical path that will reveal to us some of the quirks of the default
     (non-euler) transformations calculated by
-    {{!OSCADml.Path3.to_transforms} [Path3.to_transforms]}. *)
+    {{!OCADml.Path3.to_transforms} [Path3.to_transforms]}. *)
 let path =
   let step = 0.005 in
   let f i =
@@ -74,7 +76,8 @@ let path =
     list-comprehension-demos} library, we can see the accumulated twisting introduced by
     the default interpretation of the paths tangents. *)
 
-let () = Scad.to_file "sweep_path_default.scad" Mesh.(to_scad @@ path_extrude ~path poly)
+let () =
+  Scad.to_file "sweep_path_default.scad" (Scad.of_mesh @@ Mesh.path_extrude ~path poly)
 
 (** {%html:
     <p style="text-align:center;">
@@ -84,12 +87,12 @@ let () = Scad.to_file "sweep_path_default.scad" Mesh.(to_scad @@ path_extrude ~p
 
 (** In some scenarios, you may find the result when [euler] is [true] to be more
     intuitive, as it is here (more closely resembling the special cased
-    {{!OSCADml.Mesh.helix_extrude} [Mesh.helix_extrude]} in this case). *)
+    {{!OCADml.Mesh.helix_extrude} [Mesh.helix_extrude]} in this case). *)
 
 let () =
   Scad.to_file
     "sweep_path_euler.scad"
-    Mesh.(to_scad @@ path_extrude ~euler:true ~path poly)
+    (Scad.of_mesh @@ Mesh.path_extrude ~euler:true ~path poly)
 
 (** {%html:
     <p style="text-align:center;">

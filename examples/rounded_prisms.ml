@@ -1,10 +1,12 @@
 (** {0 Rounded Prisms} *)
+
+open OCADml
 open OSCADml
 
 (** If you are in need of extrusions with more continuous curvature than what can be
-    achieved by {{!OSCADml.Mesh.Cap.t} [Mesh.Cap.t]} specified sweep caps,
-    there are the {{!OSCADml.Mesh.linear_prism} [Mesh.linear_prism]} and
-    {{!OSCADml.Mesh.prism} [Mesh.prism]}.
+    achieved by {{!OCADml.Mesh.Cap.t} [Mesh.Cap.t]} specified sweep caps,
+    there are the {{!OCADml.Mesh.linear_prism} [Mesh.linear_prism]} and
+    {{!OCADml.Mesh.prism} [Mesh.prism]}.
 
     Generally, each of the [joint_] pairs describe the desired rounding length
     "backwards" and "forwards" from the edge (for [_top] and [_bot], this is from
@@ -14,8 +16,8 @@ open OSCADml
     to inward rounding for CCW paths).
 
     For more details on what each of the [joint_] parameters for
-   {{!OSCADml.Mesh.prism} [Mesh.prism]} mean, see the documentation for the
-   {{!type:OSCADml.Mesh.Prism.spec} [Mesh.Prism.spec]} type. *)
+   {{!OCADml.Mesh.prism} [Mesh.prism]} mean, see the documentation for the
+   {{!type:OCADml.Mesh.Prism.spec} [Mesh.Prism.spec]} type. *)
 let () =
   Poly2.star ~r1:4. ~r2:8. 5
   |> Mesh.(
@@ -28,7 +30,7 @@ let () =
                ~joint_sides:(`Flat (2., 2.))
                ())
          ~height:2.)
-  |> Mesh.to_scad
+  |> Scad.of_mesh
   |> Scad.to_file "rounded_prism_star.scad"
 
 (** {%html:
@@ -37,14 +39,14 @@ let () =
     </p> %}
     *)
 
-(** The {{!OSCADml.Mesh.prism} [Mesh.prism]} function provides us with a bit
+(** The {{!OCADml.Mesh.prism} [Mesh.prism]} function provides us with a bit
     more power, allowing us to form meshes around our own transformed bottom and
     top polygons, rather than simply linearly extruding upward from the base
     polygon.
 
     For this example, we'll make a box outline for our base, and rotate then
     translate the same shape up to act as our top polygon. Rotation about the
-    y-axis does not break the requirements of {{!OSCADml.Mesh.prism}
+    y-axis does not break the requirements of {{!OCADml.Mesh.prism}
     [Mesh.prism]}, since all of the sides will still be coplanar polygons. Note
     that z-axis rotations would violate this. *)
 
@@ -76,7 +78,7 @@ let tunnel =
   Mesh.prism ~fn:16 ~outer ~holes bot top
 
 (** Convert our [tunnel] mesh into an OpenSCAD polyhedron and output to file. *)
-let () = Scad.to_file "rounded_prism_tunnel.scad" (Mesh.to_scad tunnel)
+let () = Scad.to_file "rounded_prism_tunnel.scad" (Scad.of_mesh tunnel)
 
 (** {%html:
     <p style="text-align:center;">

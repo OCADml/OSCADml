@@ -1,0 +1,44 @@
+name: Build and Test
+
+on:
+  - push
+  - pull_request
+
+jobs:
+  build-and-test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - macos-latest
+          - ubuntu-latest
+          - windows-latest
+        ocaml-compiler:
+          - 4.08.x
+          - 4.13.x
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Use OCaml 4.13.x
+        uses: ocaml/setup-ocaml@v2
+        with:
+          ocaml-compiler: 4.13.x
+
+      - name: Install openscad on Ubuntu
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install openscad
+
+      - run: opam install . --deps-only --with-test
+
+      - run: opam exec -- make build
+
+      - run: opam exec -- make test-ocaml
+
+      - run: opam exec -- make test-e2e
+        if: ${{ matrix.os == 'ubuntu-latest' }}

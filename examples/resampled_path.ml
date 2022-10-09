@@ -1,10 +1,12 @@
 (** {0 Path resampling and scaling/twisting sweeps} *)
+
+open OCADml
 open OSCADml
 
 (** Oftentimes, we would just like to define our paths without colinear points,
     such that it only consists of corners. However, some applications call for
-    more fine sampling, and in those times we can reach for {{!OSCADml.Path3.resample}
-    [Path3.resample]} or {{!OSCADml.Path3.subdivide} [Path3.subdivide]}. For
+    more fine sampling, and in those times we can reach for {{!OCADml.Path3.resample}
+    [Path3.resample]} or {{!OCADml.Path3.subdivide} [Path3.subdivide]}. For
     this example, the exact number of points isn't a concern, so we'll specify
     a new point spacing as our [~freq]. *)
 
@@ -12,13 +14,13 @@ let path = [ v3 0. 0. 0.; v3 5. 5. 5.; v3 5. 5. 15. ]
 let resampled = Path3.subdivide ~freq:(`Spacing 0.5) path
 
 (** Lets visualize our original [path], and the [resampled] points
-    with {{!OSCADml.Path3.show_points} [Path3.show_points]} to get a sense of
+    with {{!OSCADml.Debug.show_path3} [Debug.show_path3]} to get a sense of
     how fine our [~freq] parameter has gotten us. *)
 let () =
   let old_marks =
     let f _ = Scad.(color ~alpha:0.2 Color.Magenta @@ sphere ~fn:36 0.4) in
-    Path3.show_points f path
-  and new_marks = Path3.show_points (fun _ -> Scad.sphere ~fn:36 0.2) resampled in
+    Debug.show_path3 f path
+  and new_marks = Debug.show_path3 (fun _ -> Scad.sphere ~fn:36 0.2) resampled in
   Scad.to_file "resampled_path.scad" (Scad.union [ old_marks; new_marks ])
 
 (** {%html:
@@ -40,7 +42,7 @@ let () =
       ~path:resampled
     @@ Poly2.square ~center:true (v2 1. 0.5)
   in
-  Scad.to_file "scaling_twister_extrude.scad" (Mesh.to_scad mesh)
+  Scad.to_file "scaling_twister_extrude.scad" (Scad.of_mesh mesh)
 
 (** {%html:
     <p style="text-align:center;">

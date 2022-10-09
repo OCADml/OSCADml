@@ -1,16 +1,18 @@
 (** {0 Arcing paths} *)
+
+open OCADml
 open OSCADml
 
-(** A numbered marker function for {{!OSCADml.Path2.show_points}
-    [Path2.show_points]} and {{!OSCADml.Path3.show_points}
-    [Path3.show_points]} that we can use to visualize our arcs (and their ordering). *)
+(** A numbered marker function for {{!OSCADml.Debug.show_path2}
+    [Debug.show_path2]} and {{!OSCADml.Debug.show_path3}
+    [Debug.show_path3]} that we can use to visualize our arcs (and their ordering). *)
 let show i = Scad.extrude ~height:1. (Scad.text ~size:2. (Printf.sprintf "%i" i))
 
 (** Draw an arcing path of [fn] points on the xy plane through the points
     describing a triangle. *)
 let () =
   let arc = Path2.arc_through ~fn:5 (v2 0. (-10.)) (v2 10. 0.) (v2 0. 10.) in
-  Scad.to_file "arc_points_2d.scad" (Path2.show_points show arc)
+  Scad.to_file "arc_points_2d.scad" (Debug.show_path2 show arc)
 
 (** {%html:
     <p style="text-align:center;">
@@ -29,9 +31,9 @@ let () =
       (v2 (-15.) 0.)
       (v2 5. (-5.))
   in
-  let wedge = Scad.extrude ~height:1. @@ Path2.to_scad arc
+  let wedge = Scad.extrude ~height:1. @@ Scad.of_path2 arc
   and marks =
-    Path2.show_points show arc
+    Debug.show_path2 show arc
     |> Scad.translate (v3 0. 0. 1.1)
     |> Scad.color ~alpha:0.8 Color.Magenta
   in
@@ -56,7 +58,7 @@ let () =
       ~start:0.
       (Float.pi *. 1.5)
   in
-  Scad.to_file "arc_points_3d.scad" (Path3.show_points show arc)
+  Scad.to_file "arc_points_3d.scad" (Debug.show_path3 show arc)
 
 (** {%html:
     <p style="text-align:center;">

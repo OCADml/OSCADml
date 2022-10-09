@@ -1,8 +1,9 @@
 (** {0 Profile Skinning} *)
 
+open OCADml
 open OSCADml
 
-(** The {{!OSCADml.Mesh.skin} [Mesh.skin]} function makes it (relatively) simple
+(** The {{!OCADml.Mesh.skin} [Mesh.skin]} function makes it (relatively) simple
    to generate meshes that cover over series of profiles. A greate simple
     example demonstrated by the skin modules in both
     {{:https://github.com/openscad/list-comprehension-demos}
@@ -22,11 +23,11 @@ let profiles =
 
 (** A quick look at the points of our profiles we are about to mesh over with
     alternating colours may help a bit to conceptualize what we are about to
-    give {{!OSCADml.Mesh.skin} [Mesh.skin]} to work with. *)
+    give {{!OCADml.Mesh.skin} [Mesh.skin]} to work with. *)
 let () =
   let show i =
     let c = if i mod 2 = 0 then Color.Magenta else Color.Aquamarine in
-    Path3.show_points (fun _ -> Scad.(color c @@ sphere 0.03))
+    Debug.show_path3 (fun _ -> Scad.(color c @@ sphere 0.03))
   in
   List.mapi show profiles |> Scad.union |> Scad.to_file "vaccum_connector_points.scad"
 
@@ -38,7 +39,7 @@ let () =
 
 let () =
   Mesh.skin ~slices:(`Flat 0) profiles
-  |> Mesh.to_scad
+  |> Scad.of_mesh
   |> Scad.to_file "vaccum_connector.scad"
 
 (** {%html:
@@ -53,5 +54,5 @@ let () =
     ~slices:(`Flat 25)
     ~mapping:(`Flat `Tangent)
     Path3.[ circle ~fn:5 4.; translate (v3 0. 0. 3.) @@ circle ~fn:80 2. ]
-  |> Mesh.to_scad
+  |> Scad.of_mesh
   |> Scad.to_file "tangent_skin_test.scad"

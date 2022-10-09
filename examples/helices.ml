@@ -1,4 +1,6 @@
 (** {0 Helical paths and extrusions} *)
+
+open OCADml
 open OSCADml
 
 (** Draw a right-handed helical path with [10] turns, starting with a radius of
@@ -6,7 +8,7 @@ open OSCADml
     [10. *. 5. = 50.] units tall. *)
 let () =
   Path3.helix ~left:false ~pitch:5. ~n_turns:10 ~r2:10. 5.
-  |> Path3.show_points (fun _ -> Scad.color Color.Red @@ Scad.sphere ~fn:36 0.7)
+  |> Debug.show_path3 (fun _ -> Scad.color Color.Red @@ Scad.sphere ~fn:36 0.7)
   |> Scad.to_file "helix_path_points.scad"
 
 (** {%html:
@@ -22,7 +24,7 @@ let poly =
   |> Path2.of_tups
   |> Poly2.make
 
-let () = Scad.to_file "elbow.scad" (Scad.extrude ~height:1. @@ Poly2.to_scad poly)
+let () = Scad.(to_file "elbow.scad" (extrude ~height:1. @@ of_poly2 poly))
 
 (** {%html:
     <p style="text-align:center;">
@@ -36,7 +38,7 @@ let () = Scad.to_file "elbow.scad" (Scad.extrude ~height:1. @@ Poly2.to_scad pol
 let () =
   poly
   |> Mesh.helix_extrude ~scale:(v2 0.5 2.) ~left:true ~pitch:45. ~n_turns:10 ~r2:50. 150.
-  |> Mesh.to_scad
+  |> Scad.of_mesh
   |> Scad.to_file "helix_extrude.scad"
 
 (** {%html:

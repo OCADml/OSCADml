@@ -318,6 +318,26 @@ let surface ?(convexity = 10) ?(center = false) ?(invert = false) file =
 
 let color ?alpha color = map (fun scad -> Color { scad; color; alpha })
 let render ?(convexity = 10) = map (fun scad -> Render { scad; convexity })
+let of_path2 ?convexity t = polygon ?convexity t
+
+let of_poly2 ?convexity Poly2.{ outer; holes } =
+  match holes with
+  | []    -> polygon ?convexity outer
+  | holes ->
+    let _, points, paths =
+      let f (i, points, paths) h =
+        let i, points, path =
+          let g (i, points, path) p = i + 1, p :: points, i :: path in
+          List.fold_left g (i, points, []) h
+        in
+        i, points, path :: paths
+      in
+      List.fold_left f (0, [], []) (outer :: holes)
+    in
+    polygon ?convexity ~paths:(List.rev paths) (List.rev points)
+
+let of_mesh ?convexity Mesh.{ points; faces; _ } = polyhedron ?convexity points faces
+let[@inline] of_poly3 ?convexity t = of_mesh ?convexity @@ Mesh.of_poly3 t
 
 let to_string t =
   let buf_add_list b f = function

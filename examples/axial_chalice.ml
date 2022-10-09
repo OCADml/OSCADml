@@ -1,4 +1,6 @@
 (** {0 Axial Chalice} *)
+
+open OCADml
 open OSCADml
 
 (** A function from [z] (angle [a] is ignored) to radius that we will use to
@@ -18,8 +20,7 @@ let inner = Mesh.axial_plot ~min_z:2. ~z_steps:50 ~max_z:51. (fun ~z ~a -> f ~z 
 (** Convert the [outer] and [inner] meshes to {{!OSCADml.Scad.t} [Scad.t]}s, and
    difference them before outputing to file. *)
 let () =
-  Scad.to_file "axial_chalice.scad"
-  @@ Scad.difference (Mesh.to_scad outer) [ Mesh.to_scad inner ]
+  Scad.to_file "axial_chalice.scad" @@ Scad.(difference (of_mesh outer) [ of_mesh inner ])
 
 (** {%html:
     <p style="text-align:center;">

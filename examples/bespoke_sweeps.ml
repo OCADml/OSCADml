@@ -1,13 +1,15 @@
 (** {0 Bespoke Sweeps} *)
+
+open OCADml
 open OSCADml
 
 (** Sometimes one may need more control than what
-    {{!OSCADml.Path3.to_transforms} [Path3.to_transforms]} (and by extension
-    {{!OSCADml.Mesh.path_extrude} [Mesh.path_extrude]}) provide. For instance, as
+    {{!OCADml.Path3.to_transforms} [Path3.to_transforms]} (and by extension
+    {{!OCADml.Mesh.path_extrude} [Mesh.path_extrude]}) provide. For instance, as
     demonstrated below with the {{!wavey} wavey cylinder}, when non-monotonic
     scaling throughout a sweep is desired. In those scenarios,
-    generating/composing lists of {{!OSCADml.Affine3.t} [Affine3.t]} by
-    other means and giving those to {{!OSCADml.Mesh.sweep} [Mesh.sweep]} is an
+    generating/composing lists of {{!OCADml.Affine3.t} [Affine3.t]} by
+    other means and giving those to {{!OCADml.Mesh.sweep} [Mesh.sweep]} is an
     option. *)
 
 (** {1 Flat Spiral} *)
@@ -27,10 +29,10 @@ let transforms =
   in
   List.init (Int.of_float (1. /. step) + 1) f
 
-(** {{!OSCADml.Mesh.sweep} [Mesh.sweep]} applies each of the transforms to
+(** {{!OCADml.Mesh.sweep} [Mesh.sweep]} applies each of the transforms to
     [square] in its {i original} state, linking up each resulting loop of
     points with the next to form a mesh that we can convert into an OpenSCAD polyhedron. *)
-let () = Scad.to_file "spiral.scad" @@ Mesh.(to_scad @@ sweep ~transforms square)
+let () = Scad.to_file "spiral.scad" @@ Scad.of_mesh @@ Mesh.sweep ~transforms square
 
 (** {%html:
     <p style="text-align:center;">
@@ -54,7 +56,7 @@ let () =
         (scale (v3 1. (h +. (s *. Float.sin (rad (t *. 6.)))) 1.)))
   in
   Mesh.sweep ~transforms:(List.init ((360 / 4) + 1) f) (Poly2.square (v2 2. 1.))
-  |> Mesh.to_scad
+  |> Scad.of_mesh
   |> Scad.to_file "wave_cylinder.scad"
 
 (** {%html:

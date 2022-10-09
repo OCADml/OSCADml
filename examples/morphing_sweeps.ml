@@ -1,11 +1,12 @@
 (** {0 Morphing Sweeps} *)
 
+open OCADml
 open OSCADml
 
-(** While {{!OSCADml.Mesh.sweep}
+(** While {{!OCADml.Mesh.sweep}
     [Mesh.sweep]} and it's derived functions are useful for sweeping fixed
     polygons with holes, as shown in the {{!page-"rounded_polyhole_sweep"}
-    rounded sweeps demo}, the {{!OSCADml.Mesh.morphing_sweep} [Mesh.morphing_sweep]} family
+    rounded sweeps demo}, the {{!OCADml.Mesh.morphing_sweep} [Mesh.morphing_sweep]} family
     provides a means to do so with different shapes at the beginning and end. *)
 
 let () =
@@ -20,7 +21,7 @@ let () =
   and a = Poly2.ring ~fn:5 ~thickness:(v2 2.5 2.5) (v2 6. 6.)
   and b = Poly2.ring ~fn:80 ~thickness:(v2 2. 2.) (v2 4. 4.) in
   Mesh.path_morph ~refine:2 ~caps ~path ~outer_map:`Tangent a b
-  |> Mesh.to_scad
+  |> Scad.of_mesh
   |> Scad.to_file "tangent_morph_sweep.scad"
 
 (** {%html:
@@ -30,10 +31,10 @@ let () =
     *)
 
 (** Similar to the [?scale_ez] and [?twist_ez] parameters on
-    {{!OSCADml.Path3.to_transforms} [Path3.to_transforms]} and those that make
-    use of it, such as {{!OSCADml.Mesh.morph} [Mesh.morph]}, the
-    morphing sweep functions in the {{!OSCADml.Mesh} [Mesh]} module expose [?ez], which offers
-    the same style of bezier easing (see {{!OSCADml.Easing} [Easing]}) for morphs. *)
+    {{!OCADml.Path3.to_transforms} [Path3.to_transforms]} and those that make
+    use of it, such as {{!OCADml.Mesh.morph} [Mesh.morph]}, the
+    morphing sweep functions in the {{!OCADml.Mesh} [Mesh]} module expose [?ez], which offers
+    the same style of bezier easing (see {{!OCADml.Easing} [Easing]}) for morphs. *)
 
 let () =
   let scad =
@@ -45,7 +46,7 @@ let () =
       ~height:3.
       (Poly2.ring ~fn:5 ~thickness:(v2 0.5 0.5) (v2 4. 4.))
       (Poly2.ring ~fn:80 ~thickness:(v2 0.2 0.2) (v2 1. 1.))
-    |> Mesh.to_scad
+    |> Scad.of_mesh
   in
   Scad.(
     union

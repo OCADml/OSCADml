@@ -2,9 +2,10 @@
 
 ## Overview
 
-This library provides an OCaml front-end to the
-[OpenSCAD](https://openscad.org/) solid modelling language. All SCAD primitives
-and transformation functions are made available.
+In conjunction with [OCADml](https://github.com/OCADml/OCADml), this library
+provides an OCaml front-end to the [OpenSCAD](https://openscad.org/) solid
+modelling language. All SCAD primitives and transformation functions are made
+available.
 
 ## Notable differences from the OpenSCAD language
 
@@ -24,6 +25,7 @@ and transformation functions are made available.
 ## Usage
 
 ``` ocaml
+open OCADml
 open OSCADml
 
 let () =
@@ -48,30 +50,21 @@ viewer](https://openscad.org/downloads.html) as you normally would.
 
 ## Documentation
 
-Documentation is available
-[online](https://geoffder.github.io/scad-ml/scad_ml/index.html), covering the
-[API](https://geoffder.github.io/scad-ml/scad_ml/index.html#api)
+Documentation for OSCADml is available
+[online](https://ocadml.github.io/OSCADml/OSCADml/index.html), covering the
+[API](https://ocadml.github.io/OSCADml/OSCADml/index.html#api)
 as well as some walkthrough style
-[examples](https://geoffder.github.io/scad-ml/scad_ml/index.html#examples).
+[examples](https://ocadml.github.io/OSCADml/OSCADml/index.html#examples).
+Referring to the [manual](https://ocadml.github.com/OCADml/OCADml/index.html)
+for [OCADml](https://github.com/OCADml/OCADml) is also likely to be helpful.
 
 ## Companion PPX
 
 There is a companion ppx, [\[@@deriving
-scad\]](https://github.com/geoffder/ppx_deriving_scad/tree/revamp) for generating
+cad\]](https://github.com/OCADml/ppx_deriving_cad) for generating
 transformation functions for user-defined records and abstract types made up of
 the `Scad.t`, along with their corresponding vector (`V2.t` or `V3.t`) types
-(and those composed of them) provided in this library.
-
-## Authors
-
-- [@namachan10777](https://github.com/namachan10777)
-  - Original author of core DSL
-- [@geoffder](https://github.com/geoffder)
-  - Overhauled DSL with dimensional types
-  - Additional vector transformation modules (*e.g.* `Affine3`, `Quaternion`, `Plane`)
-  - Modules implementing 2d/3d vector point representations of paths and shapes
-    along with utilities operating upon them to enable sweeps, roundovers, etc.
+(and those composed of them) provided in the
+[OCADml](https://github.com/OCADml/OCADml) library.
 
 ## License
-
-BSL-1.0

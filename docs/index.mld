@@ -21,6 +21,7 @@ OSCADml is an OCaml DSL for the {{:https://openscad.org/} OpenSCAD} solid modell
 {1 Usage}
 
 {[
+  open OCADml
   open OSCADml
 
   let () =
@@ -56,33 +57,16 @@ respectively.
 - {{!OSCADml.Text} [Text]} -- {{!OSCADml.Scad.text} [Scad.text]} configuration types
 - {{!OSCADml.Color} [Color]} -- {{!OSCADml.Scad.color} [Scad.color]} configuration type
 
-{2 Vectors and transformations}
-- {{!OSCADml.V2} [V2]} -- 2d vector operations
-- {{!OSCADml.V3} [V3]} -- 3d vector operations
-- {{!OSCADml.Affine2} [Affine2]} -- 2d affine transformation matrices
-- {{!OSCADml.Affine3} [Affine3]} -- 3d affine transformation matrices
-- {{!OSCADml.Quaternion} [Quaternion]} --
- {{:https://en.wikipedia.org/wiki/Quaternion} quaternion} manipulation andl application
-- {{!OSCADml.Plane} [Plane]} -- normalized cartesian plane operations
-
-{2 2d paths and polygons}
-- {{!OSCADml.Path2} [Path2]} -- generation and manipulation of 2d paths
-- {{!OSCADml.Bezier2} [Bezier2]} -- 2d bezier curves, patches, and splines
-- {{!OSCADml.CubicSpline} [CubicSpline]} -- cubic spline interpolation of 2d paths
-- {{!OSCADml.Poly2} [Poly2]} -- 2d polygons (outer, and zero or more inner paths)
-- {{!OSCADml.PolyText} [PolyText]} -- point representations of text (via cairo)
-
-{2 3d paths, coplanar polygons, and meshes}
-- {{!OSCADml.Path3} [Path3]} -- generation and manipulation of 3d paths
-- {{!OSCADml.Bezier3} [Bezier3]} -- 3d bezier curves, patches, and splines
-- {{!OSCADml.Poly3} [Poly3]} -- planar 3d polygons (outer, and zero or more inner paths)
-- {{!OSCADml.Mesh} [Mesh]} -- points and faces 3d mesh representation (polyhedrons)
-
 {2 Utilities}
-- {{!OSCADml.Math} [Math]} -- float and 2d matrix operations
 - {{!OSCADml.Export} [Export]} -- exporting [.scad] scripts via OpenSCAD CLI
-- {{!OSCADml.BallTree2} [BallTree2]} -- 2d vector space partitioning search tree
-- {{!OSCADml.BallTree3} [BallTree3]} -- 3d vector space partitioning search tree
+- {{!OSCADml.Debug} [Debug]} -- helpers for simple viewing of OCADml types
+
+{1:ocadml OCADml documentation}
+The {{:https://github.com/OCADml/OCADml} OCADml} library features prominently in the
+following examples, infact they can largely be considered part of OCADml's
+extended documentation. Thus in working through them, as well as using
+[OSCADml], the {{:https://OCADml.github.com/OCADml/OCADml/index.html} OCADml documentation}
+should serve as a helpful reference.
 
 {1:examples Examples}
 
@@ -109,10 +93,10 @@ respectively.
 - {{!page-"cartesian_gravity_well"} {b Cartesian gravity well}}
 - {{!page-"axial_chalice"} {b Axial chalice}}
 
-{1:ppx \[@@deriving scad\]}
+{1:ppx \[@@deriving cad\]}
 
-There is a companion ppx, {{:https://github.com/geoffder/ppx_deriving_scad} \[@@deriving scad\]}
+There is a companion ppx, {{:https://github.com/OCADml/ppx_deriving_cad} \[@@deriving cad\]}
 for generating transformation functions for user-defined records and abstract
 types made up of the {{!OSCADml.Scad.t} [Scad.t]}, along with their
-corresponding vector ({{!OSCADml.V2.t} [V2.t]} or {{!OSCADml.V3.t} [V3.t]})
-types (and those composed of them) provided in this library.
+corresponding vector ({{!OCADml.V2.t} [V2.t]} or {{!OCADml.V3.t} [V3.t]})
+types (and those composed of them) provided in by {{:https://github.com/OCADml/OCADml} OCADml}.

@@ -1,4 +1,6 @@
 (** {0 Cartesian Gravity Well} *)
+
+open OCADml
 open OSCADml
 
 (** Define a function from [x] and [y] coordinates to [z] height of the xy
@@ -20,7 +22,7 @@ let mesh =
     gravity_well
 
 (** Convert our mesh into an OpenSCAD polyhedron and output to file. *)
-let () = Scad.to_file "cartesian_gravity_well.scad" (Mesh.to_scad mesh)
+let () = Scad.to_file "cartesian_gravity_well.scad" (Scad.of_mesh mesh)
 
 (** {%html:
     <p style="text-align:center;">
