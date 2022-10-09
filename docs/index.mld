@@ -1,0 +1,118 @@
+ {0 OSCADml_ml}
+
+OSCADml is an OCaml DSL for the {{:https://openscad.org/} OpenSCAD} solid modelling language.
+
+{1 Notable differences from the OpenSCAD language}
+
+- Angles are represented in radians (and converted to degrees when compiling to
+  OpenSCAD).
+- [linear_extrude] and [rotate_extrude] have been renamed to
+  {{!OSCADml.Scad.extrude} [extrude]} and {{!OSCADml.Scad.revolve} [revolve]}
+- The dimensional system (2D or 3D) each shape inhabits is tracked by the type
+  system. This is used to restrict the operations that can be legally applied
+  (e.g. 2D shapes cannot be moved off of the xy plane,
+  {{!OSCADml.Scad.extrude} [Scad.extrude]} can only be applied to 2D shapes)
+  and enforcing non-mixing of 2D and 3D shapes during boolean operations.
+- Additional modules providing sweeps, roundovers, and more, inspired largely by
+  {{:https://github.com/revarbat/BOSL2} BOSL2}, but also other OpenSCAD libraries such
+  as {{:https://github.com/JustinSDK/dotSCAD/tree/master/src} dotSCAD}, and
+  {{:https://github.com/rcolyer/plot-function} PlotFunction}.
+
+{1 Usage}
+
+{[
+  open OSCADml
+
+  let () =
+    let scad_logo =
+      let rad = 5.
+      and fn = 720 in
+      let cyl = Scad.cylinder ~fn ~center:true ~height:(rad *. 2.3) (rad /. 2.) in
+      let cross_cyl = Scad.rotate (v3 0. (Float.pi /. 2.) 0.) cyl in
+      Scad.union
+        [ Scad.difference
+            (Scad.sphere ~fn rad)
+            [ cyl; cross_cyl; Scad.rotate (v3 0. 0. (Float.pi /. 2.)) cross_cyl ]
+        ; Scad.color ~alpha:0.25 Color.Magenta cross_cyl
+        ]
+    in
+    Scad.to_file "scad_logo.scad" scad_logo
+]}
+
+{%html: <img src="../assets/scad_logo.png" style="width:125mm;" /> %}
+
+Generated [.scad] scripts can then be viewed with the
+{{:https://openscad.org/downloads.html} OpenSCAD viewer} as you normally would, or
+directly exporting {{!OSCADml.Scad.t} [Scad.t]} into other model formats or PNGs with
+{{!OSCADml.Scad.export} [Scad.export]} and {{!OSCADml.Scad.snapshot} [Scad.snapshot]}
+respectively.
+
+{1:api API}
+
+{!module-OSCADml} -- top level library interface
+
+{2 Core DSL}
+- {{!OSCADml.Scad} [Scad]} -- well-typed dimension aware OpenSCAD models
+- {{!OSCADml.Text} [Text]} -- {{!OSCADml.Scad.text} [Scad.text]} configuration types
+- {{!OSCADml.Color} [Color]} -- {{!OSCADml.Scad.color} [Scad.color]} configuration type
+
+{2 Vectors and transformations}
+- {{!OSCADml.V2} [V2]} -- 2d vector operations
+- {{!OSCADml.V3} [V3]} -- 3d vector operations
+- {{!OSCADml.Affine2} [Affine2]} -- 2d affine transformation matrices
+- {{!OSCADml.Affine3} [Affine3]} -- 3d affine transformation matrices
+- {{!OSCADml.Quaternion} [Quaternion]} --
+ {{:https://en.wikipedia.org/wiki/Quaternion} quaternion} manipulation andl application
+- {{!OSCADml.Plane} [Plane]} -- normalized cartesian plane operations
+
+{2 2d paths and polygons}
+- {{!OSCADml.Path2} [Path2]} -- generation and manipulation of 2d paths
+- {{!OSCADml.Bezier2} [Bezier2]} -- 2d bezier curves, patches, and splines
+- {{!OSCADml.CubicSpline} [CubicSpline]} -- cubic spline interpolation of 2d paths
+- {{!OSCADml.Poly2} [Poly2]} -- 2d polygons (outer, and zero or more inner paths)
+- {{!OSCADml.PolyText} [PolyText]} -- point representations of text (via cairo)
+
+{2 3d paths, coplanar polygons, and meshes}
+- {{!OSCADml.Path3} [Path3]} -- generation and manipulation of 3d paths
+- {{!OSCADml.Bezier3} [Bezier3]} -- 3d bezier curves, patches, and splines
+- {{!OSCADml.Poly3} [Poly3]} -- planar 3d polygons (outer, and zero or more inner paths)
+- {{!OSCADml.Mesh} [Mesh]} -- points and faces 3d mesh representation (polyhedrons)
+
+{2 Utilities}
+- {{!OSCADml.Math} [Math]} -- float and 2d matrix operations
+- {{!OSCADml.Export} [Export]} -- exporting [.scad] scripts via OpenSCAD CLI
+- {{!OSCADml.BallTree2} [BallTree2]} -- 2d vector space partitioning search tree
+- {{!OSCADml.BallTree3} [BallTree3]} -- 3d vector space partitioning search tree
+
+{1:examples Examples}
+
+{2 Paths and Sweeps}
+- {{!page-"offset_and_rounding"} {b Offset and roundovers}}
+- {{!page-"default_vs_euler_sweeps"} {b Default vs euler path transformation reference}}
+- {{!page-"bespoke_sweeps"} {b Bespoke sweep transforms (with direct affine transform generation)}}
+- {{!page-"spline"} {b Cubic spline}}
+- {{!page-"arc_points"} {b Arcing paths}}
+- {{!page-"helices"} {b Helical paths and extrusions}}
+- {{!page-"resampled_path"} {b Path resampling and scaling/twisting sweeps}}
+
+{2 Rounded Extrusions}
+- {{!page-"rounded_polyhole_sweep"} {b Rounded sweeps}}
+- {{!page-"rounded_prisms"} {b Continuous curvature rounded prisms}}
+- {{!page-"rounded_text"} {b Rounded extrusion of cairo imported polygonal font}}
+
+{2 Skins and Morphs}
+- {{!page-"profile_skinning"} {b Profile skinning}}
+- {{!page-"morphing_sweeps"} {b Morphing sweeps and extrusions}}
+
+{2 Function Plotting}
+- {{!page-"polar_rose"} {b Rose polar plot}}
+- {{!page-"cartesian_gravity_well"} {b Cartesian gravity well}}
+- {{!page-"axial_chalice"} {b Axial chalice}}
+
+{1:ppx \[@@deriving scad\]}
+
+There is a companion ppx, {{:https://github.com/geoffder/ppx_deriving_scad} \[@@deriving scad\]}
+for generating transformation functions for user-defined records and abstract
+types made up of the {{!OSCADml.Scad.t} [Scad.t]}, along with their
+corresponding vector ({{!OSCADml.V2.t} [V2.t]} or {{!OSCADml.V3.t} [V3.t]})
+types (and those composed of them) provided in this library.

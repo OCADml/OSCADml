@@ -1,0 +1,40 @@
+(executables
+ (names
+  circle
+  hello
+  linear_extrude_circle
+  quat_cube
+  quat_slerp
+  rotate_extrude_triangle
+  square
+  triangle_polygon
+  vertical_text
+  rendered_sphere
+  ragged_tri_array_mesh)
+ (public_names
+  circle
+  hello
+  linear_extrude_circle
+  quat_cube
+  quat_slerp
+  rotate_extrude_triangle
+  square
+  triangle_polygon
+  vertical_text
+  rendered_sphere
+  ragged_tri_array_mesh)
+ (libraries OSCADml))
+
+(cram
+ (deps
+  %{bin:circle}
+  %{bin:hello}
+  %{bin:linear_extrude_circle}
+  %{bin:quat_cube}
+  %{bin:quat_slerp}
+  %{bin:rotate_extrude_triangle}
+  %{bin:square}
+  %{bin:triangle_polygon}
+  %{bin:vertical_text}
+  %{bin:rendered_sphere}
+  %{bin:ragged_tri_array_mesh}))

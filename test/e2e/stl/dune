@@ -1,0 +1,27 @@
+(alias
+ (name e2e)
+ (deps
+  %{bin:linear_extrude_circle}
+  %{bin:quat_cube}
+  %{bin:quat_slerp}
+  %{bin:rotate_extrude_triangle}))
+
+(rule
+ (with-stdout-to
+  linear_extrude_circle.scad
+  (run %{bin:linear_extrude_circle})))
+
+(rule
+ (with-stdout-to
+  quat_cube.scad
+  (run %{bin:quat_cube})))
+
+(rule
+ (with-stdout-to
+  quat_slerp.scad
+  (run %{bin:quat_slerp})))
+
+(rule
+ (with-stdout-to
+  rotate_extrude_triangle.scad
+  (run %{bin:rotate_extrude_triangle})))

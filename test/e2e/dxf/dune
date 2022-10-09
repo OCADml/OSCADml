@@ -1,0 +1,33 @@
+(alias
+ (name e2e)
+ (deps
+  %{bin:circle}
+  %{bin:hello}
+  %{bin:square}
+  %{bin:triangle_polygon}
+  %{bin:vertical_text}))
+
+(rule
+ (with-stdout-to
+  circle.scad
+  (run %{bin:circle})))
+
+(rule
+ (with-stdout-to
+  hello.scad
+  (run %{bin:hello})))
+
+(rule
+ (with-stdout-to
+  square.scad
+  (run %{bin:square})))
+
+(rule
+ (with-stdout-to
+  triangle_polygon.scad
+  (run %{bin:triangle_polygon})))
+
+(rule
+ (with-stdout-to
+  vertical_text.scad
+  (run %{bin:vertical_text})))

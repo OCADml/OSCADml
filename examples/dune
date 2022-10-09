@@ -1,0 +1,95 @@
+(executables
+ (names
+  rounded_text
+  bespoke_sweeps
+  rounded_polyhole_sweep
+  helices
+  cartesian_gravity_well
+  spline
+  rounded_prisms
+  arc_points
+  polar_rose
+  offset_and_rounding
+  axial_chalice
+  polyholes
+  resampled_path
+  default_vs_euler_sweeps
+  profile_skinning
+  morphing_sweeps)
+ (libraries OSCADml))
+
+; Convenience rule/alias for building and running examples (promoted to examples/scads diectory)
+; This pattern enables automatic scad re-generation on changes with `dune build -w @run`.
+
+(rule
+ (alias examples)
+ (deps
+  (sandbox always)
+  (:runner "helpers/runner.exe")
+  (:scads
+   (glob_files "*.exe")))
+ (targets
+  (dir "scads"))
+ (mode promote)
+ (action
+  (chdir
+   "scads"
+   (run %{runner} %{scads}))))
+
+; Export scad examples to stl.
+
+(rule
+ (alias export_examples)
+ (deps
+  (sandbox always)
+  (:exporter "helpers/exporter.exe")
+  (:scads
+   (glob_files "scads/*.scad")))
+ (targets
+  (dir "stls"))
+ (mode promote)
+ (action
+  (chdir
+   "stls"
+   (run %{exporter} %{scads}))))
+
+; Export scad examples to png.
+
+(rule
+ (alias snap_examples)
+ (deps
+  (sandbox always)
+  (:exporter "helpers/snapper.exe")
+  (:scads
+   (glob_files "scads/*.scad")))
+ (targets
+  (dir "pngs"))
+ (mode promote)
+ (action
+  (chdir
+   "pngs"
+   (run %{exporter} %{scads}))))
+
+(rule
+ (alias doc)
+ (deps
+  (:copier "../docs/copier.exe")
+  (:img
+   (glob_files pngs/*.png)))
+ (action
+  (run %{copier} "../_doc/_html/assets" %{img})))
+
+(rule
+ (alias examples)
+ (deps
+  (sandbox always)
+  (:doccer "helpers/doccer.exe")
+  (:ml
+   (glob_files "*.ml")))
+ (targets
+  (dir "docs"))
+ (mode promote)
+ (action
+  (chdir
+   "docs"
+   (run %{doccer} %{ml}))))

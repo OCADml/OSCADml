@@ -1,0 +1,4 @@
+(library
+ (name OSCADml)
+ (public_name OSCADml)
+ (libraries OCADml cairo2))
