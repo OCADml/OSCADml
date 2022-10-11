@@ -108,17 +108,32 @@ val snapshot
 
 (** {1 File extension helpers} *)
 
-module ExtSet : Set.S with type elt = string
+module ExtMap : Map.S with type key = string
+
+type ext2 =
+  [ `Csg
+  | `Dxf
+  | `Svg
+  ]
+
+type ext3 =
+  [ `Amf
+  | `Csg
+  | `Off
+  | `Stl
+  | `Wrl
+  | `_3mf
+  ]
 
 (** Set of 2D output format file extensions: [".dxf"], [".svg"], [".csg"] *)
-val d2_exts : ExtSet.t
+val d2_exts : [> ext2 ] ExtMap.t
 
 (** Set of 3D output format file extensions: [".stl"], [".off"], [".amf"],
    [".3mf"], [".csg"], [".wrl"] *)
-val d3_exts : ExtSet.t
+val d3_exts : [> ext3 ] ExtMap.t
 
 (** [legal_ext allowed path]
 
     Check whether the extention of the file at [path] is in the [allowed],
     returning it as the error string if not. *)
-val legal_ext : ExtSet.t -> string -> (unit, string) result
+val legal_ext : [ ext2 | ext3 ] ExtMap.t -> string -> ([ ext2 | ext3 ], string) result

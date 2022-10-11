@@ -4,14 +4,41 @@ let openscad = if Sys.unix then "openscad" else "openscad.com"
 let sz = 8192
 let bytes = Bytes.create sz
 
-module ExtSet = Set.Make (String)
+module ExtMap = Map.Make (String)
 
-let d2_exts = ExtSet.of_list [ ".dxf"; ".svg"; ".csg" ]
-let d3_exts = ExtSet.of_list [ ".stl"; ".off"; ".amf"; ".3mf"; ".csg"; ".wrl" ]
+type ext2 =
+  [ `Csg
+  | `Dxf
+  | `Svg
+  ]
 
-let legal_ext allowed file =
+type ext3 =
+  [ `Amf
+  | `Csg
+  | `Off
+  | `Stl
+  | `Wrl
+  | `_3mf
+  ]
+
+let d2_exts = ExtMap.of_seq @@ List.to_seq [ ".dxf", `Dxf; ".svg", `Svg; ".csg", `Csg ]
+
+let d3_exts =
+  ExtMap.of_seq
+  @@ List.to_seq
+       [ ".stl", `Stl
+       ; ".off", `Off
+       ; ".amf", `Amf
+       ; ".3mf", `_3mf
+       ; ".csg", `Csg
+       ; ".wrl", `Wrl
+       ]
+
+let legal_ext (allowed : [> ext2 | ext3 ] ExtMap.t) file =
   let ext = String.uncapitalize_ascii @@ Filename.extension file in
-  if ExtSet.mem ext allowed then Ok () else Error ext
+  match ExtMap.find_opt ext allowed with
+  | Some ext -> Ok ext
+  | None -> Error ext
 
 let file_to_string path =
   let fd = Unix.openfile path [ O_RDONLY ] 0o777
@@ -34,7 +61,7 @@ let script out_path scad_path =
   let format =
     match Filename.extension out_path with
     | ".stl" -> "binstl"
-    | ext when not ExtSet.(mem ext d2_exts || mem ext d3_exts) ->
+    | ext when not ExtMap.(mem ext d2_exts || mem ext d3_exts) ->
       invalid_arg (Printf.sprintf "Unsupported export file exension: %s" ext)
     | ext -> String.sub ext 1 (String.length ext - 1)
   and err_name = Filename.temp_file "OSCADml_" "_err" in
@@ -117,34 +144,34 @@ let camera_to_args = function
     |]
 
 let colorscheme_to_string = function
-  | Cornfield     -> "Cornfield"
-  | Metallic      -> "Metallic"
-  | Sunset        -> "Sunset"
-  | Starnight     -> "Starnight"
-  | BeforeDawn    -> "BeforeDawn"
-  | Nature        -> "Nature"
-  | DeepOcean     -> "DeepOcean"
-  | Solarized     -> "Solarized"
-  | Tomorrow      -> "Tomorrow"
+  | Cornfield -> "Cornfield"
+  | Metallic -> "Metallic"
+  | Sunset -> "Sunset"
+  | Starnight -> "Starnight"
+  | BeforeDawn -> "BeforeDawn"
+  | Nature -> "Nature"
+  | DeepOcean -> "DeepOcean"
+  | Solarized -> "Solarized"
+  | Tomorrow -> "Tomorrow"
   | TomorrowNight -> "Tomorrow Night"
-  | Monotone      -> "Monotone"
+  | Monotone -> "Monotone"
 
 let view_to_string = function
-  | Axes       -> "axes"
+  | Axes -> "axes"
   | Crosshairs -> "crosshairs"
-  | Edges      -> "edges"
-  | Scales     -> "scales"
-  | Wireframe  -> "wireframe"
+  | Edges -> "edges"
+  | Scales -> "scales"
+  | Wireframe -> "wireframe"
 
 let view_list_to_args = function
-  | []       -> [||]
+  | [] -> [||]
   | hd :: tl ->
     let f acc a = Printf.sprintf "%s,%s" acc (view_to_string a) in
     [| "--view"; List.fold_left f (view_to_string hd) tl |]
 
 let projection_to_string = function
   | Perspective -> "perspective"
-  | Orthogonal  -> "orthogonal"
+  | Orthogonal -> "orthogonal"
 
 let snapshot
     ?(render = false)

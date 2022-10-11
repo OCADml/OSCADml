@@ -85,10 +85,15 @@ type scad =
       ; mode : [ `Radius | `Delta | `Chamfer ]
       ; d : float
       }
-  | Import of
+  | Import2 of
       { file : string
       ; convexity : int
-      ; dxf_layer : string option
+      ; layer : string option
+      ; ext : [ `Dxf | `Svg ]
+      }
+  | Import3 of
+      { file : string
+      ; convexity : int
       }
   | Surface of
       { file : string
@@ -177,7 +182,7 @@ let rotate : type s r a. ?about:s -> r -> (s, r, a) t -> (s, r, a) t =
       | D3 _ -> V3.neg p
     in
     translate p' t |> aux |> translate p
-  | None   -> aux t
+  | None -> aux t
 
 let[@inline] xrot ?about x t = rotate ?about (v3 x 0. 0.) t
 let[@inline] yrot ?about y t = rotate ?about (v3 0. y 0.) t
@@ -192,7 +197,7 @@ let axis_rotate ?about ax r t =
   let aux (D3 scad) = d3 @@ AxisRotate (ax, r, scad) in
   match about with
   | Some p -> translate (V3.neg p) t |> aux |> translate p
-  | None   -> aux t
+  | None -> aux t
 
 let affine (type s r a) (m : a) : (s, r, a) t -> (s, r, a) t = function
   | D2 scad -> d2 @@ MultMatrix (Affine2.lift m, scad)
@@ -202,7 +207,7 @@ let quaternion ?about q t =
   let aux (D3 scad) = d3 @@ MultMatrix (Quaternion.to_affine q, scad) in
   match about with
   | Some p -> translate (V3.neg p) t |> aux |> translate p
-  | None   -> aux t
+  | None -> aux t
 
 let union2 ts = d2 @@ Union (List.map unpack ts)
 let union3 ts = d3 @@ Union (List.map unpack ts)
@@ -219,7 +224,7 @@ let union : type s r a. (s, r, a) t list -> (s, r, a) t =
   match ts with
   | D2 _ :: _ -> union2 ts
   | D3 _ :: _ -> union3 ts
-  | []        -> empty_exn "union"
+  | [] -> empty_exn "union"
 
 let add a b = union [ a; b ]
 
@@ -235,7 +240,7 @@ let intersection : type s r a. (s, r, a) t list -> (s, r, a) t =
   match ts with
   | D2 _ :: _ -> intersection2 ts
   | D3 _ :: _ -> intersection3 ts
-  | []        -> empty_exn "intersection"
+  | [] -> empty_exn "intersection"
 
 let hull2 ts = d2 @@ Hull (List.map unpack ts)
 let hull3 ts = d3 @@ Hull (List.map unpack ts)
@@ -245,7 +250,7 @@ let hull : type s r a. (s, r, a) t list -> (s, r, a) t =
   match ts with
   | D2 _ :: _ -> hull2 ts
   | D3 _ :: _ -> hull3 ts
-  | []        -> empty_exn "hull"
+  | [] -> empty_exn "hull"
 
 let minkowski2 ts = d2 @@ Minkowski (List.map unpack ts)
 let minkowski3 ts = d3 @@ Minkowski (List.map unpack ts)
@@ -255,7 +260,7 @@ let minkowski : type s r a. (s, r, a) t list -> (s, r, a) t =
   match ts with
   | D2 _ :: _ -> minkowski2 ts
   | D3 _ :: _ -> minkowski3 ts
-  | []        -> empty_exn "minkowski"
+  | [] -> empty_exn "minkowski"
 
 let polyhedron ?(convexity = 10) points faces =
   d3 @@ Polyhedron { points; faces; convexity }
@@ -301,20 +306,23 @@ let resize (type s r a) (new_dims : s) : (s, r, a) t -> (s, r, a) t = function
   | D3 scad -> d3 @@ Resize (new_dims, scad)
 
 let offset ?(mode = `Delta) d (D2 scad) = d2 @@ Offset { scad; mode; d }
-let import ?dxf_layer ?(convexity = 10) file = Import { file; convexity; dxf_layer }
-let d2_import_exts = Export.ExtSet.of_list [ ".dxf"; ".svg" ]
-let d3_import_exts = Export.ExtSet.of_list [ ".stl"; ".off"; ".amf"; ".3mf" ]
+let d2_import_exts = Export.ExtMap.of_seq @@ List.to_seq [ ".dxf", `Dxf; ".svg", `Svg ]
 
-let import2 ?dxf_layer ?convexity file =
+let d3_import_exts =
+  Export.ExtMap.of_seq
+  @@ List.to_seq [ ".stl", `Stl; ".off", `Off; ".amf", `Amf; ".3mf", `_3mf ]
+
+let import2 ?layer ?(convexity = 10) file =
   match Export.legal_ext d2_import_exts file with
-  | Ok ()     -> d2 @@ import ?dxf_layer ?convexity file
+  | Ok ((`Dxf | `Svg) as ext) -> d2 @@ Import2 { file; convexity; layer; ext }
   | Error ext ->
     invalid_arg
       (Printf.sprintf "Input file extension %s is not supported for 2D import." ext)
+  | _ -> assert false (* unreachable, 3d extensions not in 2d set *)
 
-let import3 ?convexity file =
+let import3 ?(convexity = 10) file =
   match Export.legal_ext d3_import_exts file with
-  | Ok ()     -> d3 @@ import ?convexity file
+  | Ok _ -> d3 @@ Import3 { file; convexity }
   | Error ext ->
     invalid_arg
       (Printf.sprintf "Input file extension %s is not supported for 3D import." ext)
@@ -322,7 +330,7 @@ let import3 ?convexity file =
 let surface ?(convexity = 10) ?(center = false) ?(invert = false) file =
   match Filename.extension file with
   | ".dat" | ".png" -> d3 @@ Surface { file; center; invert; convexity }
-  | ext             ->
+  | ext ->
     invalid_arg
     @@ (Printf.sprintf "Input file extension %s is not supported for surface import.") ext
 
@@ -332,7 +340,7 @@ let of_path2 ?convexity t = polygon ?convexity t
 
 let of_poly2 ?convexity Poly2.{ outer; holes } =
   match holes with
-  | []    -> polygon ?convexity outer
+  | [] -> polygon ?convexity outer
   | holes ->
     let _, points, paths =
       let f (i, points, paths) h =
@@ -360,7 +368,7 @@ let to_string t =
       f b h;
       List.iter append t;
       Buffer.add_char b ']'
-    | []     ->
+    | [] ->
       let b = Buffer.create 2 in
       Buffer.add_char b '[';
       Buffer.add_char b ']'
@@ -557,17 +565,19 @@ let to_string t =
         "%soffset(%s)\n%s"
         indent
         ( match mode with
-        | `Radius  -> Printf.sprintf "r = %f" d
-        | `Delta   -> Printf.sprintf "delta = %f" d
+        | `Radius -> Printf.sprintf "r = %f" d
+        | `Delta -> Printf.sprintf "delta = %f" d
         | `Chamfer -> Printf.sprintf "delta = %f, chamfer=true" d )
         (print (Printf.sprintf "%s\t" indent) scad)
-    | Import { file; convexity; dxf_layer } ->
-      Printf.sprintf
-        "%simport(\"%s\", convexity=%i%s);\n"
-        indent
-        file
-        convexity
-        (maybe_fmt ", layer=%s" dxf_layer)
+    | Import2 { file; convexity; layer; ext } ->
+      let layer =
+        match ext with
+        | `Dxf -> maybe_fmt ", layer=%s" layer
+        | `Svg -> maybe_fmt ", id=%s" layer
+      in
+      Printf.sprintf "%simport(\"%s\", convexity=%i%s);\n" indent file convexity layer
+    | Import3 { file; convexity } ->
+      Printf.sprintf "%simport(\"%s\", convexity=%i);\n" indent file convexity
     | Surface { file; center; invert; convexity } ->
       Printf.sprintf
         "%ssurface(\"%s\", center=%B, invert=%B, convexity=%i);\n"
@@ -604,7 +614,7 @@ let export (type s r a) path (t : (s, r, a) t) =
     | D3 _ -> "3D", Export.d3_exts
   in
   match Export.legal_ext allowed path with
-  | Ok ()     ->
+  | Ok _ ->
     let temp = Filename.temp_file "scad_export_" ".scad" in
     to_file temp t;
     Export.script path temp

@@ -489,7 +489,7 @@ val revolve
     extension does not match (case insensitive) one of the following 2D formats:
     - DXF
     - SVG ({i Requires version 2019.05 of OpenSCAD}) *)
-val import2 : ?dxf_layer:string -> ?convexity:int -> string -> d2
+val import2 : ?layer:string -> ?convexity:int -> string -> d2
 
 (** [import3 ?convexity file]
 
