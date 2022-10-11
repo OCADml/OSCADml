@@ -252,6 +252,21 @@ val mirror : 's -> ('s, 'r, 'a) t -> ('s, 'r, 'a) t
     Scales [t] by the given [factors] in xyz. *)
 val scale : 's -> ('s, 'r, 'a) t -> ('s, 'r, 'a) t
 
+(** [xscale s t]
+
+    Scales [t] by the factor [s] in the x-dimension. *)
+val xscale : float -> ('s, 'r, 'a) t -> ('s, 'r, 'a) t
+
+(** [yscale s t]
+
+    Scales [t] by the factor [s] in the y-dimension. *)
+val yscale : float -> ('s, 'r, 'a) t -> ('s, 'r, 'a) t
+
+(** [zscale s t]
+
+    Scales [t] by the factor [s] in the z-dimension. *)
+val zscale : float -> d3 -> d3
+
 (** [resize dimensions t]
 
     Adjusts the size of [t] to match the given [dimensions]. *)

@@ -286,6 +286,16 @@ let scale (type s r a) (factors : s) : (s, r, a) t -> (s, r, a) t = function
   | D2 scad -> d2 @@ Scale (V3.of_v2 factors, scad)
   | D3 scad -> d3 @@ Scale (factors, scad)
 
+let xscale (type s r a) x : (s, r, a) t -> (s, r, a) t = function
+  | D2 scad -> d2 @@ Scale (v3 x 1. 1., scad)
+  | D3 scad -> d3 @@ Scale (v3 x 1. 1., scad)
+
+let yscale (type s r a) y : (s, r, a) t -> (s, r, a) t = function
+  | D2 scad -> d2 @@ Scale (v3 1. y 1., scad)
+  | D3 scad -> d3 @@ Scale (v3 1. y 1., scad)
+
+let[@inline] zscale z t = scale (v3 1. 1. z) t
+
 let resize (type s r a) (new_dims : s) : (s, r, a) t -> (s, r, a) t = function
   | D2 scad -> d2 @@ Resize (V3.of_v2 new_dims, scad)
   | D3 scad -> d3 @@ Resize (new_dims, scad)
