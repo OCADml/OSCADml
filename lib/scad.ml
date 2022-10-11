@@ -139,20 +139,9 @@ let square ?(center = false) size = d2 @@ Square { size; center }
 let circle ?fa ?fs ?fn r = d2 @@ Circle { r; fa; fs; fn }
 let polygon ?(convexity = 10) ?paths points = d2 @@ Polygon { points; paths; convexity }
 
-let text ?size ?font ?halign ?valign ?spacing ?direction ?language ?script ?fn str =
+let text ?size ?font ?halign ?valign ?spacing ?direction ?language ?script ?fn text =
   d2
-  @@ Text
-       { text = str
-       ; size
-       ; font
-       ; halign
-       ; valign
-       ; spacing
-       ; direction
-       ; language
-       ; script
-       ; fn
-       }
+  @@ Text { text; size; font; halign; valign; spacing; direction; language; script; fn }
 
 let translate (type s r a) (p : s) : (s, r, a) t -> (s, r, a) t = function
   | D2 scad -> d2 @@ Translate (V3.of_v2 p, scad)
