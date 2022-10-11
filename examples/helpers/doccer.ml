@@ -76,7 +76,7 @@ let digest src =
 
 let () =
   let oc = open_out "dune" in
-  output_string oc "(documentation (package scad_ml))";
+  output_string oc "(documentation (package OSCADml))";
   close_out oc;
   let f i = digest Sys.argv.(i + 1) in
   List.init (Array.length Sys.argv - 1) (Thread.create f) |> List.iter Thread.join

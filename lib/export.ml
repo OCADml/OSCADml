@@ -37,7 +37,7 @@ let script out_path scad_path =
     | ext when not ExtSet.(mem ext d2_exts || mem ext d3_exts) ->
       invalid_arg (Printf.sprintf "Unsupported export file exension: %s" ext)
     | ext -> String.sub ext 1 (String.length ext - 1)
-  and err_name = Filename.temp_file "scad_ml_" "_err" in
+  and err_name = Filename.temp_file "OSCADml_" "_err" in
   let err = Unix.openfile err_name [ O_WRONLY; O_CREAT; O_TRUNC ] 0o777 in
   let pid =
     Unix.create_process
@@ -156,7 +156,7 @@ let snapshot
     out_path
     scad_path
   =
-  let err_name = Filename.temp_file "scad_ml_" "_err" in
+  let err_name = Filename.temp_file "OSCADml_" "_err" in
   let err = Unix.openfile err_name [ O_WRONLY; O_CREAT; O_TRUNC ] 0o777 in
   let args =
     let base =
