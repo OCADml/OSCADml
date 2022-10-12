@@ -343,7 +343,7 @@ let of_poly2 ?convexity Poly2.{ outer; holes } =
     in
     polygon ?convexity ~paths:(List.rev paths) (List.rev points)
 
-let of_mesh ?convexity Mesh.{ points; faces; _ } = polyhedron ?convexity points faces
+let of_mesh ?convexity m = polyhedron ?convexity (Mesh.points m) (Mesh.faces m)
 let[@inline] of_poly3 ?convexity t = of_mesh ?convexity @@ Mesh.of_poly3 t
 
 let to_string t =
