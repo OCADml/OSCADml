@@ -55,7 +55,7 @@ Documentation for OSCADml is available
 [API](https://ocadml.github.io/OSCADml/OSCADml/index.html#api)
 as well as some walkthrough style
 [examples](https://ocadml.github.io/OSCADml/OSCADml/index.html#examples).
-Referring to the [manual](https://ocadml.github.com/OCADml/OCADml/index.html)
+Referring to the [manual](https://ocadml.github.io/OCADml/OCADml/index.html)
 for [OCADml](https://github.com/OCADml/OCADml) is also likely to be helpful.
 
 ## Companion PPX
