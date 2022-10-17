@@ -17,10 +17,6 @@ available.
   (e.g. 2D shapes cannot be moved off of the xy plane, `extrude` can only
   be applied to 2D shapes) and enforcing non-mixing of 2D and 3D shapes during
   boolean operations.
-- Additional modules providing sweeps, roundovers, and more, inspired largely by
-  [BOSL2](https://github.com/revarbat/BOSL2), but also other OpenSCAD libraries such
-  as [dotSCAD](https://github.com/JustinSDK/dotSCAD/tree/master/src), and
-  [PlotFunction](https://github.com/rcolyer/plot-function).
 
 ## Usage
 
@@ -66,5 +62,3 @@ transformation functions for user-defined records and abstract types made up of
 the `Scad.t`, along with their corresponding vector (`V2.t` or `V3.t`) types
 (and those composed of them) provided in the
 [OCADml](https://github.com/OCADml/OCADml) library.
-
-## License
