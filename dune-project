@@ -13,7 +13,7 @@
 
 (documentation https://ocadml.github.io/OSCADml)
 
-(license BSL-1.0)
+(license GPL-2.0-or-later)
 
 (authors
  "Geoff deRosenroll<geoffderosenroll@gmail.com"

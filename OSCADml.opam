@@ -8,13 +8,13 @@ authors: [
   "Geoff deRosenroll<geoffderosenroll@gmail.com"
   "Masaki Nakano<namachan10777@gmail.com>"
 ]
-license: "BSL-1.0"
+license: "GPL-2.0-or-later"
 homepage: "https://github.com/OCADml/OSCADml"
 doc: "https://ocadml.github.io/OSCADml"
 bug-reports: "https://github.com/OCADml/OSCADml/issues"
 depends: [
   "dune" {>= "3.3"}
-  "ocaml" {>= "4.08.0"}
+  "ocaml" {>= "4.13.0"}
   "cairo2" {>= "0.6.2"}
   "OCADml" {<= "0.1.0"}
   "odoc" {with-doc}
