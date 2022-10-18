@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>default_vs_euler_sweeps (OSCADml.default_vs_euler_sweeps)</title><link rel="stylesheet" href="../odoc.css"/><meta charset="utf-8"/><meta name="generator" content="odoc 2.1.1"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><script src="../highlight.pack.js"></script><script>hljs.initHighlightingOnLoad();</script></head><body class="odoc"><nav class="odoc-nav"><a href="index.html">Up</a> – <a href="index.html">OSCADml</a> &#x00BB; default_vs_euler_sweeps</nav><header class="odoc-preamble"><h1 id="path-transfomations-(default-vs-euler)"><a href="#path-transfomations-(default-vs-euler)" class="anchor"></a>Path transfomations (default vs euler)</h1><pre><code>open OCADml
+open OSCADml</code></pre><p>We'll use a simple elbow shape for our sweeps so that its orientation is easily discernible along the path.</p><pre><code>let poly =
+  [ -10., -1.; -10., 6.; -7., 6.; -7., 1.; 7., 1.; 7., 6.; 10., 6.; 10., -1. ]
+  |&gt; Path2.of_tups
+  |&gt; Path2.scale (v2 0.7 0.7)
+  |&gt; Poly2.make</code></pre><p>Paths radiating outwards from the origin, angled with 45° steps.</p><pre><code>let paths =
+  let d = 20.
+  and p { x; y; z } = [ v3 x y z; v3 (x *. 2.) (y *. 2.) (z *. 2.) ] in
+  let out = [ v3 d 0. 0.; v3 d 0. d; v3 d 0. (-.d) ] in
+  let f i = List.map (fun s -&gt; V3.rotate (v3 0. 0. Float.(pi /. 4. *. i)) s |&gt; p) out in
+  p (v3 0. 0. d) :: p (v3 0. 0. (-.d)) :: List.concat_map f (List.init 8 Float.of_int)</code></pre><p>Original orientation of the shape <code>poly</code> for reference.</p><pre><code>let flat = Scad.extrude ~height:1. (Scad.of_poly2 poly)</code></pre><p>Extrude <code>poly</code> along each of the generated <code>paths</code>, using either default/standard, or euler path transformations (see <span class="xref-unresolved"><code>Path3.to_transforms</code></span>).</p><pre><code>let starburst ~euler =
+  let scad =
+    let f path = Scad.of_mesh @@ Mesh.path_extrude ~euler ~path poly in
+    Scad.union @@ (flat :: List.map f paths)
+  and name =
+    Printf.sprintf &quot;sweep_starburst_%s.scad&quot; (if euler then &quot;euler&quot; else &quot;default&quot;)
+  in
+  Scad.to_file name scad</code></pre><p>Note that with the default (non-euler) path transformations, the orienation of the polygon on the xy plane relative to the starting tangent of te path determines the starting orientation of the sweep. This is in contrast to to when <code>euler</code> is <code>true</code>, where there is radial symmetetry around the z-axis.</p><pre><code>let () = starburst ~euler:false (* default path transformations *)</code></pre>
+<p style="text-align:center;">
+<img src="../assets/sweep_starburst_default.png" style="width:150mm;"/>
+</p> <pre><code>let () = starburst ~euler:true (* euler path transformations *)</code></pre>
+<p style="text-align:center;">
+<img src="../assets/sweep_starburst_euler.png" style="width:150mm;"/>
+</p> <p>A conical path that will reveal to us some of the quirks of the default (non-euler) transformations calculated by <span class="xref-unresolved"><code>Path3.to_transforms</code></span>.</p><pre><code>let path =
+  let step = 0.005 in
+  let f i =
+    let t = Float.of_int i *. step in
+    let x = ((t /. 1.5) +. 0.5) *. 100. *. Float.cos (6. *. 360. *. t *. Float.pi /. 180.)
+    and y = ((t /. 1.5) +. 0.5) *. 100. *. Float.sin (6. *. 360. *. t *. Float.pi /. 180.)
+    and z = 200. *. (1. -. t) in
+    v3 x y z
+  in
+  List.init (Int.of_float (1. /. step)) f</code></pre><p>Here, much like in the example in the <a href="https://github.com/openscad/list-comprehension-demos#sweep-pathscad">sweep example</a> of the OpenSCAD <a href="https://github.com/openscad/list-comprehension-demos">list-comprehension-demos</a> library, we can see the accumulated twisting introduced by the default interpretation of the paths tangents.</p><pre><code>let () =
+  Scad.to_file &quot;sweep_path_default.scad&quot; (Scad.of_mesh @@ Mesh.path_extrude ~path poly)</code></pre>
+<p style="text-align:center;">
+<img src="../assets/sweep_path_default.png" style="width:150mm;"/>
+</p> <p>In some scenarios, you may find the result when <code>euler</code> is <code>true</code> to be more intuitive, as it is here (more closely resembling the special cased <span class="xref-unresolved"><code>Mesh.helix_extrude</code></span> in this case).</p><pre><code>let () =
+  Scad.to_file
+    &quot;sweep_path_euler.scad&quot;
+    (Scad.of_mesh @@ Mesh.path_extrude ~euler:true ~path poly)</code></pre>
+<p style="text-align:center;">
+<img src="../assets/sweep_path_euler.png" style="width:150mm;"/>
+</p> </header><div class="odoc-content"></div></body></html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>profile_skinning (OSCADml.profile_skinning)</title><link rel="stylesheet" href="../odoc.css"/><meta charset="utf-8"/><meta name="generator" content="odoc 2.1.1"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><script src="../highlight.pack.js"></script><script>hljs.initHighlightingOnLoad();</script></head><body class="odoc"><nav class="odoc-nav"><a href="index.html">Up</a> – <a href="index.html">OSCADml</a> &#x00BB; profile_skinning</nav><header class="odoc-preamble"><h1 id="profile-skinning"><a href="#profile-skinning" class="anchor"></a>Profile Skinning</h1><pre><code>open OCADml
+open OSCADml</code></pre><p>The <span class="xref-unresolved"><code>Mesh.skin</code></span> function makes it (relatively) simple to generate meshes that cover over series of profiles. A greate simple example demonstrated by the skin modules in both <a href="https://github.com/openscad/list-comprehension-demos">list-comprehension-demos</a> and <a href="https://github.com/revarbat/BOSL2/wiki/skin.scad">BOSL2</a> is the vaccum connector.</p><pre><code>let profiles =
+  let fn = 32
+  and up h = Path3.translate (v3 0. 0. h) in
+  let base =
+    let sq = Path3.square ~center:true (v2 2. 4.) in
+    Path3.(roundover ~fn (Round.flat ~corner:(Round.circ (`Radius 0.5)) sq))
+  and c r h = up h @@ Path3.circle ~fn r in
+  let cones = List.map (fun h -&gt; [ c 0.6 h; c 0.5 (h +. 1.) ]) [ 4.; 5.; 6. ] in
+  List.flatten @@ ([ base; up 2. base; c 0.5 3.; c 0.5 4. ] :: cones)</code></pre><p>A quick look at the points of our profiles we are about to mesh over with alternating colours may help a bit to conceptualize what we are about to give <span class="xref-unresolved"><code>Mesh.skin</code></span> to work with.</p><pre><code>let () =
+  let show i =
+    let c = if i mod 2 = 0 then Color.Magenta else Color.Aquamarine in
+    Debug.show_path3 (fun _ -&gt; Scad.(color c @@ sphere 0.03))
+  in
+  List.mapi show profiles |&gt; Scad.union |&gt; Scad.to_file &quot;vaccum_connector_points.scad&quot;</code></pre>
+<p style="text-align:center;">
+<img src="../assets/vaccum_connector_points.png" style="width:150mm;"/>
+</p> <pre><code>let () =
+  Mesh.skin ~slices:(`Flat 0) profiles
+  |&gt; Scad.of_mesh
+  |&gt; Scad.to_file &quot;vaccum_connector.scad&quot;</code></pre>
+<p style="text-align:center;">
+<img src="../assets/vaccum_connector.png" style="width:150mm;"/>
+</p> <pre><code>let () =
+  Mesh.skin
+    ~refine:2
+    ~slices:(`Flat 25)
+    ~mapping:(`Flat `Tangent)
+    Path3.[ circle ~fn:5 4.; translate (v3 0. 0. 3.) @@ circle ~fn:80 2. ]
+  |&gt; Scad.of_mesh
+  |&gt; Scad.to_file &quot;tangent_skin_test.scad&quot;</code></pre></header><div class="odoc-content"></div></body></html>

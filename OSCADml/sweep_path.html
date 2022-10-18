@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>sweep_path (OSCADml.sweep_path)</title><link rel="stylesheet" href="../odoc.css"/><meta charset="utf-8"/><meta name="generator" content="odoc 2.1.1"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><script src="../highlight.pack.js"></script><script>hljs.initHighlightingOnLoad();</script></head><body class="odoc"><nav class="odoc-nav"><a href="index.html">Up</a> – <a href="index.html">OSCADml</a> &#x00BB; sweep_path</nav><header class="odoc-preamble"><h1 id="path-extrusions-(standard-and-euler)"><a href="#path-extrusions-(standard-and-euler)" class="anchor"></a>Path extrusions (standard and euler)</h1><pre><code>open OSCADml
+
+let () =
+  let step = 0.005 in
+  let path =
+    let f i =
+      let t = Float.of_int i *. step in
+      let x =
+        ((t /. 1.5) +. 0.5) *. 100. *. Float.cos (6. *. 360. *. t *. Float.pi /. 180.)
+      and y =
+        ((t /. 1.5) +. 0.5) *. 100. *. Float.sin (6. *. 360. *. t *. Float.pi /. 180.)
+      and z = 200. *. (1. -. t) in
+      v3 x y z
+    in
+    List.init (Int.of_float (1. /. step)) f
+  and poly =
+    [ -10., -1.; -10., 6.; -7., 6.; -7., 1.; 7., 1.; 7., 6.; 10., 6.; 10., -1. ]
+    |&gt; Path2.of_tups
+    |&gt; Poly2.make
+  in
+  Scad.to_file &quot;sweep_path.scad&quot; Mesh.(to_scad @@ path_extrude ~path poly);
+  Scad.to_file
+    &quot;sweep_path_euler.scad&quot;
+    Mesh.(to_scad @@ path_extrude ~euler:true ~path poly)</code></pre></header><div class="odoc-content"></div></body></html>
