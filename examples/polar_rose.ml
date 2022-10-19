@@ -21,10 +21,17 @@ let rose ~r ~a =
     to a maximal radius of [max_r]. For each of these radii, [rose] will be
     evaluated with angles revolving around the z-axis, evaluating to the height
     off of the XY plane that that position should be. *)
-let mesh = Mesh.polar_plot ~r_step:0.4 ~max_r:22. rose
+let mesh = Mesh.polar_plot ~r_step:0.2 ~max_r:22. rose
 
-(** Convert our mesh into an OpenSCAD polyhedron and output to file. *)
-let () = Scad.to_file "polar_rose.scad" (Scad.of_mesh mesh)
+(** As the generated mesh contains quite a large number of points due to the
+    relatively low value of [r_step] (megabytes), we'll take advantage of the
+   [include] trick provided by the optional [?incl] parameter to
+   {{!OSCADml.Scad.to_file} [Scad.to_file]}. This will produce a pair of [.scad]
+   scripts, one named ["incl_polar_rose.scad"], and another named
+   ["polar_rose.scad"] that simply includes it. By loading the later into
+   OpenSCAD rather than the former, we can avoid the sluggishness that can
+   result when the editor attempts to handle large files. *)
+let () = Scad.to_file ~incl:true "polar_rose.scad" (Scad.of_mesh mesh)
 
 (** {%html:
     <p style="text-align:center;">

@@ -559,11 +559,14 @@ val of_mesh : ?convexity:int -> Mesh.t -> d3
     Convert the scad [t] to a string in the OpenSCAD language. *)
 val to_string : ('s, 'r, 'a) t -> string
 
-(** [to_file path t]
+(** [to_file ?incl path t]
 
     Write the scad [t] to a file at the given [path], as an OpenSCAD script
-    (using {!to_string}). *)
-val to_file : string -> ('s, 'r, 'a) t -> unit
+    (using {!to_string}). If [incl] is [true] (default = [false]), then an
+    additional file (prefixed with ["incl_"]) is produced and [include]d into
+    the script at [path]. This trick can be helpful to avoid sluggishness
+    associated with loading large scripts into the OpenSCAD editor. *)
+val to_file : ?incl:bool -> string -> ('s, 'r, 'a) t -> unit
 
 (** [export path t]
 

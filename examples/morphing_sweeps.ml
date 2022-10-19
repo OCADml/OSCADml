@@ -36,8 +36,8 @@ let () =
     morphing sweep functions in the {{!OCADml.Mesh} [Mesh]} module expose [?ez], which offers
     the same style of bezier easing (see {{!OCADml.Easing} [Easing]}) for morphs. *)
 
-let () =
-  let scad =
+let scad =
+  let top =
     Mesh.morph
       ~refine:2
       ~ez:(v2 0.42 0., v2 1. 1.)
@@ -48,12 +48,19 @@ let () =
       (Poly2.ring ~fn:80 ~thickness:(v2 0.2 0.2) (v2 1. 1.))
     |> Scad.of_mesh
   in
-  Scad.(
-    union
-      [ translate (v3 0. 0. 2.) scad
-      ; translate (v3 0. 0. (-2.)) @@ rotate (v3 Float.pi 0. 0.) scad
-      ])
-  |> Scad.to_file "eased_morph.scad"
+  Scad.(add (ztrans 2. top) (ztrans (-2.) @@ xrot Float.pi top))
+
+(** As the generated mesh contains quite a large number of points due to the
+    large number of slices and the resolution of the inner ring (and the
+   duplication) of the shape (megabytes), we'll take advantage of the [include]
+   trick provided by the optional [?incl] parameter to {{!OSCADml.Scad.to_file}
+   [Scad.to_file]}. This will produce a pair of [.scad] scripts, one named
+   ["incl_eased_morph.scad"], and another named ["eased_morph.scad"] that simply
+   includes it. By loading the later into OpenSCAD rather than the former, we
+   can avoid the sluggishness that can result when the editor attempts to handle
+   large files. *)
+
+let () = Scad.to_file ~incl:true "eased_morph.scad" scad
 
 (** {%html:
     <p style="text-align:center;">

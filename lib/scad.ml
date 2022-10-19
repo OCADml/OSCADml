@@ -591,10 +591,16 @@ let to_string t =
   in
   print "" (unpack t)
 
-let to_file path t =
-  let oc = open_out path in
-  Printf.fprintf oc "%s" (to_string t);
-  close_out oc
+let to_file ?(incl = false) path t =
+  let model_path =
+    if incl
+    then (
+      let name = "incl_" ^ Filename.basename path in
+      Out_channel.with_open_text path (fun oc -> Printf.fprintf oc "include <%s>" name);
+      Filename.(concat (dirname path) name) )
+    else path
+  in
+  Out_channel.with_open_text model_path (fun oc -> Printf.fprintf oc "%s" (to_string t))
 
 let export (type s r a) path (t : (s, r, a) t) =
   let space, allowed =
