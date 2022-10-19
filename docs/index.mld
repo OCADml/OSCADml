@@ -1,6 +1,9 @@
  {0 OSCADml_ml}
 
-OSCADml is an OCaml DSL for the {{:https://openscad.org/} OpenSCAD} solid modelling language.
+In conjunction with {{:https://github.com/OCADml/OCADml} [OCADml]}, this library
+provides an OCaml front-end to the {{:https://openscad.org/} OpenSCAD} solid
+modelling language. All SCAD primitives and transformation functions are made
+available.
 
 {1 Notable differences from the OpenSCAD language}
 
@@ -13,10 +16,6 @@ OSCADml is an OCaml DSL for the {{:https://openscad.org/} OpenSCAD} solid modell
   (e.g. 2D shapes cannot be moved off of the xy plane,
   {{!OSCADml.Scad.extrude} [Scad.extrude]} can only be applied to 2D shapes)
   and enforcing non-mixing of 2D and 3D shapes during boolean operations.
-- Additional modules providing sweeps, roundovers, and more, inspired largely by
-  {{:https://github.com/revarbat/BOSL2} BOSL2}, but also other OpenSCAD libraries such
-  as {{:https://github.com/JustinSDK/dotSCAD/tree/master/src} dotSCAD}, and
-  {{:https://github.com/rcolyer/plot-function} PlotFunction}.
 
 {1 Usage}
 
@@ -62,8 +61,8 @@ respectively.
 - {{!OSCADml.Debug} [Debug]} -- helpers for simple viewing of OCADml types
 
 {1:ocadml OCADml documentation}
-The {{:https://github.com/OCADml/OCADml} OCADml} library features prominently in the
-following examples, infact they can largely be considered part of OCADml's
+The {{:https://github.com/OCADml/OCADml} [OCADml]} library features prominently in the
+following examples, infact they can largely be considered part of [OCADml]'s
 extended documentation. Thus in working through them, as well as using
 [OSCADml], the {{:https://OCADml.github.com/OCADml/OCADml/index.html} OCADml documentation}
 should serve as a helpful reference.
@@ -100,3 +99,26 @@ for generating transformation functions for user-defined records and abstract
 types made up of the {{!OSCADml.Scad.t} [Scad.t]}, along with their
 corresponding vector ({{!OCADml.V2.t} [V2.t]} or {{!OCADml.V3.t} [V3.t]})
 types (and those composed of them) provided in by {{:https://github.com/OCADml/OCADml} OCADml}.
+
+{1:auto_generation Generating models on write}
+
+For a more pleasant modelling experience, it is highly recommended to setup
+{{:https://github.com/ocaml/dune} dune} to automate writing your models to file
+whenever the source files are saved. To do so, add a
+{{:https://dune.readthedocs.io/en/latest/dune-files.html#rule} dune rule} that runs
+your projects executable after it is built. For example, in [your_project/bin/dune]:
+
+{[
+(executable
+ (public_name your_project)
+ (name main)
+ (libraries OCADml OSCADml))
+
+(rule
+ (alias model)
+ (action
+  (run your_project)))
+]}
+
+Then start {b dune} in {{:https://dune.readthedocs.io/en/latest/usage.html#watch-mode} watch mode}
+with [dune build -w @model].
