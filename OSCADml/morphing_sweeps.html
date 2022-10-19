@@ -16,8 +16,8 @@ open OSCADml</code></pre><p>While <span class="xref-unresolved"><code>Mesh.sweep
   |&gt; Scad.to_file &quot;tangent_morph_sweep.scad&quot;</code></pre>
 <p style="text-align:center;">
 <img src="../assets/tangent_morph_sweep.png" style="width:150mm;"/>
-</p> <p>Similar to the <code>?scale_ez</code> and <code>?twist_ez</code> parameters on <span class="xref-unresolved"><code>Path3.to_transforms</code></span> and those that make use of it, such as <span class="xref-unresolved"><code>Mesh.morph</code></span>, the morphing sweep functions in the <span class="xref-unresolved"><code>Mesh</code></span> module expose <code>?ez</code>, which offers the same style of bezier easing (see <span class="xref-unresolved"><code>Easing</code></span>) for morphs.</p><pre><code>let () =
-  let scad =
+</p> <p>Similar to the <code>?scale_ez</code> and <code>?twist_ez</code> parameters on <span class="xref-unresolved"><code>Path3.to_transforms</code></span> and those that make use of it, such as <span class="xref-unresolved"><code>Mesh.morph</code></span>, the morphing sweep functions in the <span class="xref-unresolved"><code>Mesh</code></span> module expose <code>?ez</code>, which offers the same style of bezier easing (see <span class="xref-unresolved"><code>Easing</code></span>) for morphs.</p><pre><code>let scad =
+  let top =
     Mesh.morph
       ~refine:2
       ~ez:(v2 0.42 0., v2 1. 1.)
@@ -28,12 +28,7 @@ open OSCADml</code></pre><p>While <span class="xref-unresolved"><code>Mesh.sweep
       (Poly2.ring ~fn:80 ~thickness:(v2 0.2 0.2) (v2 1. 1.))
     |&gt; Scad.of_mesh
   in
-  Scad.(
-    union
-      [ translate (v3 0. 0. 2.) scad
-      ; translate (v3 0. 0. (-2.)) @@ rotate (v3 Float.pi 0. 0.) scad
-      ])
-  |&gt; Scad.to_file &quot;eased_morph.scad&quot;</code></pre>
+  Scad.(add (ztrans 2. top) (ztrans (-2.) @@ xrot Float.pi top))</code></pre><p>As the generated mesh contains quite a large number of points due to the large number of slices and the resolution of the inner ring (and the duplication) of the shape (megabytes), we'll take advantage of the <code>include</code> trick provided by the optional <code>?incl</code> parameter to <a href="OSCADml/Scad/index.html#val-to_file"><code>Scad.to_file</code></a>. This will produce a pair of <code>.scad</code> scripts, one named <code>&quot;incl_eased_morph.scad&quot;</code>, and another named <code>&quot;eased_morph.scad&quot;</code> that simply includes it. By loading the later into OpenSCAD rather than the former, we can avoid the sluggishness that can result when the editor attempts to handle large files.</p><pre><code>let () = Scad.to_file ~incl:true &quot;eased_morph.scad&quot; scad</code></pre>
 <p style="text-align:center;">
 <img src="../assets/eased_morph.png" style="width:150mm;"/>
 </p> </header><div class="odoc-content"></div></body></html>
