@@ -1,4 +1,4 @@
 (library
  (name OSCADml)
  (public_name OSCADml)
- (libraries OCADml cairo2))
+ (libraries OCADml cairo2 unix))
