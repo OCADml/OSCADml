@@ -64,7 +64,7 @@ respectively.
 The {{:https://github.com/OCADml/OCADml} [OCADml]} library features prominently in the
 following examples, infact they can largely be considered part of [OCADml]'s
 extended documentation. Thus in working through them, as well as using
-[OSCADml], the {{:https://OCADml.github.com/OCADml/OCADml/index.html} OCADml documentation}
+[OSCADml], the {{:https://OCADml.github.io/OCADml/OCADml/index.html} OCADml manual}
 should serve as a helpful reference.
 
 {1:examples Examples}
