@@ -124,7 +124,7 @@ let rounded_path =
     both ends off with caps. If the swept polygon has holes (as our [poly]
     does), they will be included, and continuous much like the outer shape. *)
 let () =
-  let loop = Scad.of_mesh @@ Mesh.path_extrude ~caps:`Looped ~path:rounded_path poly
+  let loop = Scad.of_mesh @@ Mesh.(path_extrude ~caps:Cap.looped ~path:rounded_path poly)
   and cut =
     Scad.cylinder ~fn:50 ~center:true ~height:11. 5.
     |> Scad.scale (v3 1.2 1. 1.)

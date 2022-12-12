@@ -201,7 +201,7 @@ val xtrans : float -> ('s, 'r, 'a) t -> ('s, 'r, 'a) t
     Moves [t] by the distance [y] along the y-axis. *)
 val ytrans : float -> ('s, 'r, 'a) t -> ('s, 'r, 'a) t
 
-(** [ztrans y t]
+(** [ztrans z t]
 
     Moves the 3d shape [t] by the distance [z] along the z-axis. *)
 val ztrans : float -> d3 -> d3

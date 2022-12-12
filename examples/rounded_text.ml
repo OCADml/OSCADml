@@ -18,7 +18,7 @@ let hello = PolyText.text ~center:true ~fn:5 ~size:5. ~font:"Ubuntu" "Hello!"
     roundover operations are applied. *)
 let caps =
   let spec = Mesh.Cap.(round ~mode:Delta @@ circ ~fn:5 (`Cut 0.025)) in
-  Mesh.Cap.{ top = spec; bot = spec }
+  Mesh.Cap.capped ~top:spec ~bot:spec
 
 (** Map over the character polys in [hello] with a rounded extrusion funcion
     specified by [caps], and convert into {{!OSCADml.Scad.t} [Scad.t]}s that we
