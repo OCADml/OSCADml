@@ -26,6 +26,8 @@
  (synopsis "OCaml DSL for 3D solid modelling in OpenSCAD")
  (description
   "OSCADml is an OCaml front-end to the OpenSCAD CAD programming language.")
+ (tags
+  ("OCADml" "CAD" "OpenSCAD"))
  (depends
   (ocaml
    (>= 4.14.0))
