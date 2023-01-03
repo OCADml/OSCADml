@@ -1,4 +1,4 @@
- {0 OSCADml_ml}
+ {0 OSCADml}
 
 In conjunction with {{:https://github.com/OCADml/OCADml} [OCADml]}, this library
 provides an OCaml front-end to the {{:https://openscad.org/} OpenSCAD} solid
