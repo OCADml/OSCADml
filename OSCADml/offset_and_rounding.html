@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"><head><title>offset_and_rounding (OSCADml.offset_and_rounding)</title><link rel="stylesheet" href="../odoc.css"/><meta charset="utf-8"/><meta name="generator" content="odoc 2.1.1"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><script src="../highlight.pack.js"></script><script>hljs.initHighlightingOnLoad();</script></head><body class="odoc"><nav class="odoc-nav"><a href="index.html">Up</a> – <a href="index.html">OSCADml</a> &#x00BB; offset_and_rounding</nav><header class="odoc-preamble"><h1 id="offsets-and-roundovers"><a href="#offsets-and-roundovers" class="anchor"></a>Offsets and roundovers</h1><pre><code>open OCADml
-open OSCADml</code></pre><p>Draw a <code>poly</code>gon and make a <code>pointy</code> scad from it to compare to our alterations.</p><pre><code>let poly = Poly2.make V2.[ v (-4.) 0.; v 5. 3.; v 0. 7.; v 8. 7.; v 20. 20.; v 10. 0. ]
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>offset_and_rounding (OSCADml.offset_and_rounding)</title><link rel="stylesheet" href="../odoc.css"/><meta charset="utf-8"/><meta name="generator" content="odoc 2.2.0"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><script src="../highlight.pack.js"></script><script>hljs.initHighlightingOnLoad();</script></head><body class="odoc"><nav class="odoc-nav"><a href="index.html">Up</a> – <a href="index.html">OSCADml</a> &#x00BB; offset_and_rounding</nav><header class="odoc-preamble"><h1 id="offsets-and-roundovers"><a href="#offsets-and-roundovers" class="anchor"></a>Offsets and roundovers</h1><pre class="language-ocaml"><code>open OCADml
+open OSCADml</code></pre><p>Draw a <code>poly</code>gon and make a <code>pointy</code> scad from it to compare to our alterations.</p><pre class="language-ocaml"><code>let poly = Poly2.make V2.[ v (-4.) 0.; v 5. 3.; v 0. 7.; v 8. 7.; v 20. 20.; v 10. 0. ]
 
 let pointy =
   Scad.of_poly2 poly
   |&gt; Scad.extrude ~height:1.
   |&gt; Scad.translate (v3 0. 0. (-0.5))
-  |&gt; Scad.color ~alpha:0.5 Color.Silver</code></pre><p><span class="xref-unresolved"><code>Poly2.offset</code></span>, and <span class="xref-unresolved"><code>Path2.offset</code></span>, are the point representation counterparts of <a href="OSCADml/Scad/index.html#val-offset"><code>Scad.offset</code></a>, so they share the same semantics. For this example, we apply an negative (inward) circular offset.</p><pre><code>let () =
+  |&gt; Scad.color ~alpha:0.5 Color.Silver</code></pre><p><span class="xref-unresolved"><code>Poly2.offset</code></span>, and <span class="xref-unresolved"><code>Path2.offset</code></span>, are the point representation counterparts of <a href="OSCADml/Scad/index.html#val-offset"><code>Scad.offset</code></a>, so they share the same semantics. For this example, we apply an negative (inward) circular offset.</p><pre class="language-ocaml"><code>let () =
   Poly2.offset ~mode:`Radius (-0.5) poly
   |&gt; Scad.of_poly2
   |&gt; Scad.extrude ~height:1.
@@ -14,16 +14,16 @@ let pointy =
   |&gt; Scad.to_file &quot;offset_poly.scad&quot;</code></pre>
 <p style="text-align:center;">
 <img src="../assets/offset_poly.png" style="width:150mm;"/>
-</p> <p>More fine-grained control over 2d <i>and</i> 3d path roundovers can be found in the <span class="xref-unresolved"><code>Path2.Round</code></span> and <span class="xref-unresolved"><code>Path3.Round</code></span> modules respectively. For this example, we'll use the <span class="xref-unresolved"><code>Path2.Round.circles</code></span> constructor to create our circular roundover specification with different <code>radii</code> assigned to each point of the input path <code>poly.outer</code>.</p><pre><code>let shape_spec =
+</p> <p>More fine-grained control over 2d <i>and</i> 3d path roundovers can be found in the <span class="xref-unresolved"><code>Path2.Round</code></span> and <span class="xref-unresolved"><code>Path3.Round</code></span> modules respectively. For this example, we'll use the <span class="xref-unresolved"><code>Path2.Round.circles</code></span> constructor to create our circular roundover specification with different <code>radii</code> assigned to each point of the input path <code>poly.outer</code>.</p><pre class="language-ocaml"><code>let shape_spec =
   let radii = [ 1.; 1.5; 0.1; 10.; 0.8; 10. ] in
-  Path2.Round.circles ~kind:`Radius (List.combine poly.outer radii)</code></pre><p>Then we'll apply our <span class="xref-unresolved"><code>Path2.Round.t</code></span> <code>shape_spec</code> with <span class="xref-unresolved"><code>Path2.roundover</code></span>, with <code>fn</code> segments per corner, and compare that to the original <code>pointy</code> shape.</p><pre><code>let () =
+  Path2.Round.circles ~kind:`Radius (List.combine poly.outer radii)</code></pre><p>Then we'll apply our <span class="xref-unresolved"><code>Path2.Round.t</code></span> <code>shape_spec</code> with <span class="xref-unresolved"><code>Path2.roundover</code></span>, with <code>fn</code> segments per corner, and compare that to the original <code>pointy</code> shape.</p><pre class="language-ocaml"><code>let () =
   Scad.polygon (Path2.roundover ~fn:60 shape_spec)
   |&gt; Scad.extrude ~height:1.
   |&gt; Scad.add pointy
   |&gt; Scad.to_file &quot;circular_rounding.scad&quot;</code></pre>
 <p style="text-align:center;">
 <img src="../assets/circular_rounding.png" style="width:150mm;"/>
-</p> <pre><code>let () =
+</p> <pre class="language-ocaml"><code>let () =
   let sq = Path3.square ~center:true (v2 2. 2.)
   and circ = Path3.(ztrans 2. @@ yrot (Float.pi /. 2.) @@ circle ~fn:32 3.) in
   Mesh.hull (List.append sq circ)

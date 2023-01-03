@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"><head><title>cartesian_gravity_well (OSCADml.cartesian_gravity_well)</title><link rel="stylesheet" href="../odoc.css"/><meta charset="utf-8"/><meta name="generator" content="odoc 2.1.1"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><script src="../highlight.pack.js"></script><script>hljs.initHighlightingOnLoad();</script></head><body class="odoc"><nav class="odoc-nav"><a href="index.html">Up</a> – <a href="index.html">OSCADml</a> &#x00BB; cartesian_gravity_well</nav><header class="odoc-preamble"><h1 id="cartesian-gravity-well"><a href="#cartesian-gravity-well" class="anchor"></a>Cartesian Gravity Well</h1><pre><code>open OCADml
-open OSCADml</code></pre><p>Define a function from <code>x</code> and <code>y</code> coordinates to <code>z</code> height of the xy plane.</p><pre><code>let gravity_well ~x ~y =
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>cartesian_gravity_well (OSCADml.cartesian_gravity_well)</title><link rel="stylesheet" href="../odoc.css"/><meta charset="utf-8"/><meta name="generator" content="odoc 2.2.0"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><script src="../highlight.pack.js"></script><script>hljs.initHighlightingOnLoad();</script></head><body class="odoc"><nav class="odoc-nav"><a href="index.html">Up</a> – <a href="index.html">OSCADml</a> &#x00BB; cartesian_gravity_well</nav><header class="odoc-preamble"><h1 id="cartesian-gravity-well"><a href="#cartesian-gravity-well" class="anchor"></a>Cartesian Gravity Well</h1><pre class="language-ocaml"><code>open OCADml
+open OSCADml</code></pre><p>Define a function from <code>x</code> and <code>y</code> coordinates to <code>z</code> height of the xy plane.</p><pre class="language-ocaml"><code>let gravity_well ~x ~y =
   let z = 50. -. (50. /. Float.sqrt ((x *. x) +. (y *. y))) in
-  if z &lt; 1. then 1. else z</code></pre><p>Evaluate <code>gravity_well</code>, producing a mesh with the resulting height at each point of the grid defined by the xy bound and step parameters.</p><pre><code>let mesh =
+  if z &lt; 1. then 1. else z</code></pre><p>Evaluate <code>gravity_well</code>, producing a mesh with the resulting height at each point of the grid defined by the xy bound and step parameters.</p><pre class="language-ocaml"><code>let mesh =
   Mesh.cartesian_plot
     ~min_x:(-10.)
     ~x_steps:30
@@ -10,7 +10,7 @@ open OSCADml</code></pre><p>Define a function from <code>x</code> and <code>y</c
     ~min_y:(-10.)
     ~y_steps:60
     ~max_y:10.
-    gravity_well</code></pre><p>Convert our mesh into an OpenSCAD polyhedron and output to file.</p><pre><code>let () = Scad.to_file &quot;cartesian_gravity_well.scad&quot; (Scad.of_mesh mesh)</code></pre>
+    gravity_well</code></pre><p>Convert our mesh into an OpenSCAD polyhedron and output to file.</p><pre class="language-ocaml"><code>let () = Scad.to_file &quot;cartesian_gravity_well.scad&quot; (Scad.of_mesh mesh)</code></pre>
 <p style="text-align:center;">
 <img src="../assets/cartesian_gravity_well.png" style="width:150mm;"/>
 </p> </header><div class="odoc-content"></div></body></html>
