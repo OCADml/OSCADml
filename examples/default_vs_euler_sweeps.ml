@@ -14,7 +14,7 @@ let poly =
 (** Paths radiating outwards from the origin, angled with 45° steps. *)
 let paths =
   let d = 20.
-  and p { x; y; z } = [ v3 x y z; v3 (x *. 2.) (y *. 2.) (z *. 2.) ] in
+  and p s = V3.[ v (x s) (y s) (z s); v3 (x s *. 2.) (y s *. 2.) (z s *. 2.) ] in
   let out = [ v3 d 0. 0.; v3 d 0. d; v3 d 0. (-.d) ] in
   let f i = List.map (fun s -> V3.rotate (v3 0. 0. Float.(pi /. 4. *. i)) s |> p) out in
   p (v3 0. 0. d) :: p (v3 0. 0. (-.d)) :: List.concat_map f (List.init 8 Float.of_int)

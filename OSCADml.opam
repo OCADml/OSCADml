@@ -16,8 +16,9 @@ bug-reports: "https://github.com/OCADml/OSCADml/issues"
 depends: [
   "dune" {>= "3.3"}
   "ocaml" {>= "4.14.0"}
+  "gg" {>= "1.0.0"}
   "cairo2" {>= "0.6.2"}
-  "OCADml" {>= "0.2.0"}
+  "OCADml" {>= "0.3.0"}
   "odoc" {with-doc}
 ]
 build: [

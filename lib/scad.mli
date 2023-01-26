@@ -27,13 +27,13 @@ type scad
       the affine transformation matrix to use for the {!affine} function (which
       maps down to {{:https://en.wikibooks.org/wiki/OpenSCAD_User_Manual/The_OpenSCAD_Language#multmatrix}
       multmatrix} in OpenSCAD). *)
-type ('space, 'rot, 'affine) t
+type ('dim, 'space, 'rot, 'affine) t
 
 (** Two-dimensional shape *)
-type d2 = (V2.t, float, Affine2.t) t
+type d2 = ([ `D2 ], V2.t, float, Affine2.t) t
 
 (** Three-dimensional shape *)
-type d3 = (V3.t, V3.t, Affine3.t) t
+type d3 = ([ `D3 ], V3.t, V3.t, Affine3.t) t
 
 (** {1 A note on special facet parameters}
 
@@ -189,17 +189,17 @@ val empty2 : d2
 (** [translate p t]
 
     Moves [t] along the vector [p]. *)
-val translate : 's -> ('s, 'r, 'a) t -> ('s, 'r, 'a) t
+val translate : 's -> ('d, 's, 'r, 'a) t -> ('d, 's, 'r, 'a) t
 
 (** [xtrans x t]
 
     Moves [t] by the distance [x] along the x-axis. *)
-val xtrans : float -> ('s, 'r, 'a) t -> ('s, 'r, 'a) t
+val xtrans : float -> ('d, 's, 'r, 'a) t -> ('d, 's, 'r, 'a) t
 
 (** [ytrans y t]
 
     Moves [t] by the distance [y] along the y-axis. *)
-val ytrans : float -> ('s, 'r, 'a) t -> ('s, 'r, 'a) t
+val ytrans : float -> ('d, 's, 'r, 'a) t -> ('d, 's, 'r, 'a) t
 
 (** [ztrans z t]
 
@@ -212,7 +212,7 @@ val ztrans : float -> d3 -> d3
     otherwise ([(r : float) (t : d2)]), a single rotation around the z-axis is
     performed. If it is provided, rotations are performed around the point [about],
     otherwise rotation is about the origin. Angle(s) [r] are in radians. *)
-val rotate : ?about:'s -> 'r -> ('s, 'r, 'a) t -> ('s, 'r, 'a) t
+val rotate : ?about:'s -> 'r -> ('d, 's, 'r, 'a) t -> ('d, 's, 'r, 'a) t
 
 (** [xrot ?about r t]
 
@@ -231,7 +231,7 @@ val yrot : ?about:V3.t -> float -> d3 -> d3
     Rotate the shape [t] (2d or 3d) around the z-axis through the origin (or the
     point [about] if provided) by [r] (in radians). For 2d shapes, this is
     equivalent to {!rotate}. *)
-val zrot : ?about:'s -> float -> ('s, 'r, 'a) t -> ('s, 'r, 'a) t
+val zrot : ?about:'s -> float -> ('d, 's, 'r, 'a) t -> ('d, 's, 'r, 'a) t
 
 (** [affine mat t]
 
@@ -239,28 +239,28 @@ val zrot : ?about:'s -> float -> ('s, 'r, 'a) t -> ('s, 'r, 'a) t
     [mat] ({!Affine2.t} for 2d, {!Affine3.t} for 3d shapes) via the
     {{:https://en.wikibooks.org/wiki/OpenSCAD_User_Manual/The_OpenSCAD_Language#multmatrix}
     multmatrix} operation in OpenSCAD. *)
-val affine : 'a -> ('s, 'r, 'a) t -> ('s, 'r, 'a) t
+val affine : 'a -> ('d, 's, 'r, 'a) t -> ('d, 's, 'r, 'a) t
 
 (** [mirror ax t]
 
     Mirrors [t] on a plane through the origin, defined by the normal vector
     [ax]. *)
-val mirror : 's -> ('s, 'r, 'a) t -> ('s, 'r, 'a) t
+val mirror : 's -> ('d, 's, 'r, 'a) t -> ('d, 's, 'r, 'a) t
 
 (** [scale factors t]
 
     Scales [t] by the given [factors] in xyz. *)
-val scale : 's -> ('s, 'r, 'a) t -> ('s, 'r, 'a) t
+val scale : 's -> ('d, 's, 'r, 'a) t -> ('d, 's, 'r, 'a) t
 
 (** [xscale s t]
 
     Scales [t] by the factor [s] in the x-dimension. *)
-val xscale : float -> ('s, 'r, 'a) t -> ('s, 'r, 'a) t
+val xscale : float -> ('d, 's, 'r, 'a) t -> ('d, 's, 'r, 'a) t
 
 (** [yscale s t]
 
     Scales [t] by the factor [s] in the y-dimension. *)
-val yscale : float -> ('s, 'r, 'a) t -> ('s, 'r, 'a) t
+val yscale : float -> ('d, 's, 'r, 'a) t -> ('d, 's, 'r, 'a) t
 
 (** [zscale s t]
 
@@ -270,14 +270,14 @@ val zscale : float -> d3 -> d3
 (** [resize dimensions t]
 
     Adjusts the size of [t] to match the given [dimensions]. *)
-val resize : 's -> ('s, 'r, 'a) t -> ('s, 'r, 'a) t
+val resize : 's -> ('d, 's, 'r, 'a) t -> ('d, 's, 'r, 'a) t
 
 (** [color ?alpha color t]
 
     Displays [t] with the specified [color] and [?alpha] value. This is only
     used for the F5 preview as CGAL and STL (F6, render) do not currently
     support color. Defaults to opaque (alpha = 1.0). *)
-val color : ?alpha:float -> Color.t -> ('s, 'r, 'a) t -> ('s, 'r, 'a) t
+val color : ?alpha:float -> Color.t -> ('d, 's, 'r, 'a) t -> ('d, 's, 'r, 'a) t
 
 (** [render ?convexity t]
 
@@ -286,7 +286,7 @@ val color : ?alpha:float -> Color.t -> ('s, 'r, 'a) t -> ('s, 'r, 'a) t
     Note that this does however remove any colouration applied previously with
     {!color}, or resulting from boolean operations such as {!difference}.
     Output rendering {b (F6)} performance is unaffected. *)
-val render : ?convexity:int -> ('s, 'r, 'a) t -> ('s, 'r, 'a) t
+val render : ?convexity:int -> ('d, 's, 'r, 'a) t -> ('d, 's, 'r, 'a) t
 
 (** {1 3d Only Transformations}
 
@@ -362,7 +362,7 @@ val offset : ?mode:[ `Delta | `Radius | `Chamfer ] -> float -> d2 -> d2
              ; translate p (cube { x = 2. +. eps; y = 2.; z = 2. })
              ]
    ]} *)
-val union : ('s, 'r, 'a) t list -> ('s, 'r, 'a) t
+val union : ('d, 's, 'r, 'a) t list -> ('d, 's, 'r, 'a) t
 
 val union2 : d2 list -> d2
 val union3 : d3 list -> d3
@@ -370,7 +370,7 @@ val union3 : d3 list -> d3
 (** [add a b]
 
     Union the shapes [a] and [b]. Equivalent to [union [a; b]]. *)
-val add : ('s, 'r, 'a) t -> ('s, 'r, 'a) t -> ('s, 'r, 'a) t
+val add : ('d, 's, 'r, 'a) t -> ('d, 's, 'r, 'a) t -> ('d, 's, 'r, 'a) t
 
 (** [difference t sub]
 
@@ -383,12 +383,12 @@ val add : ('s, 'r, 'a) t -> ('s, 'r, 'a) t -> ('s, 'r, 'a) t
     in non-manifold render warnings or the removal of pieces from the render
     output. See the description above in union for why this is required and an
     example of how to do this by this using a small epsilon value. *)
-val difference : ('s, 'r, 'a) t -> ('s, 'r, 'a) t list -> ('s, 'r, 'a) t
+val difference : ('d, 's, 'r, 'a) t -> ('d, 's, 'r, 'a) t list -> ('d, 's, 'r, 'a) t
 
 (** [sub a b]
 
     Subtract the shape [b] from [a]. Equivalent to [difference a [b]]. *)
-val sub : ('s, 'r, 'a) t -> ('s, 'r, 'a) t -> ('s, 'r, 'a) t
+val sub : ('d, 's, 'r, 'a) t -> ('d, 's, 'r, 'a) t -> ('d, 's, 'r, 'a) t
 
 (** [intersection ts]
 
@@ -397,7 +397,7 @@ val sub : ('s, 'r, 'a) t -> ('s, 'r, 'a) t -> ('s, 'r, 'a) t
     are retained. Throws an exception if [ts] is empty, use {!intersection2}
     or {!intersection3} if you would like empty intersections to pass
     silently. *)
-val intersection : ('s, 'r, 'a) t list -> ('s, 'r, 'a) t
+val intersection : ('d, 's, 'r, 'a) t list -> ('d, 's, 'r, 'a) t
 
 val intersection2 : d2 list -> d2
 val intersection3 : d3 list -> d3
@@ -407,7 +407,7 @@ val intersection3 : d3 list -> d3
     Displays the minkowski sum of [ts]. Throws an exception if [ts] is empty,
     use {!minkowski2} or {!minkowski3} if you would like empty minkowski
     sums to pass silently. *)
-val minkowski : ('s, 'r, 'a) t list -> ('s, 'r, 'a) t
+val minkowski : ('d, 's, 'r, 'a) t list -> ('d, 's, 'r, 'a) t
 
 val minkowski2 : d2 list -> d2
 val minkowski3 : d3 list -> d3
@@ -416,7 +416,7 @@ val minkowski3 : d3 list -> d3
 
     Displays the convex hull of [ts]. Throws an exception if [ts] is empty, use
     {!hull2} or {!hull3} if you would like empty hulls to pass silently. *)
-val hull : ('s, 'r, 'a) t list -> ('s, 'r, 'a) t
+val hull : ('d, 's, 'r, 'a) t list -> ('d, 's, 'r, 'a) t
 
 val hull2 : d2 list -> d2
 val hull3 : d3 list -> d3
@@ -557,7 +557,7 @@ val of_mesh : ?convexity:int -> Mesh.t -> d3
 (** [to_string t]
 
     Convert the scad [t] to a string in the OpenSCAD language. *)
-val to_string : ('s, 'r, 'a) t -> string
+val to_string : ('d, 's, 'r, 'a) t -> string
 
 (** [to_file ?incl path t]
 
@@ -566,7 +566,7 @@ val to_string : ('s, 'r, 'a) t -> string
     additional file (prefixed with ["incl_"]) is produced and [include]d into
     the script at [path]. This trick can be helpful to avoid sluggishness
     associated with loading large scripts into the OpenSCAD editor. *)
-val to_file : ?incl:bool -> string -> ('s, 'r, 'a) t -> unit
+val to_file : ?incl:bool -> string -> ('d, 's, 'r, 'a) t -> unit
 
 (** [export path t]
 
@@ -576,7 +576,7 @@ val to_file : ?incl:bool -> string -> ('s, 'r, 'a) t -> unit
     errors). Compatible extensions:
     - {b 2D}: [.dxf], [.svg], [.csg]
     - {b 3D}: [.stl], [.off], [.amf], [.3mf], [.csg], [.wrl] *)
-val export : string -> ('s, 'r, 'a) t -> (unit, string) result
+val export : string -> ('d, 's, 'r, 'a) t -> (unit, string) result
 
 (** [snapshot ?render ?colorscheme ?projection ?size ?camera path t]
 
@@ -599,7 +599,7 @@ val snapshot
   -> ?size:int * int
   -> ?camera:Export.camera
   -> string
-  -> ('s, 'r, 'a) t
+  -> ('d, 's, 'r, 'a) t
   -> (unit, string) result
 
 (** {1 Infix Operators} *)
@@ -607,9 +607,9 @@ val snapshot
 (** [t |>> p]
 
     Infix {!translate} *)
-val ( |>> ) : ('s, 'r, 'a) t -> 's -> ('s, 'r, 'a) t
+val ( |>> ) : ('d, 's, 'r, 'a) t -> 's -> ('d, 's, 'r, 'a) t
 
 (** [t |@> r]
 
     Infix {!rotate} *)
-val ( |@> ) : ('s, 'r, 'a) t -> 'r -> ('s, 'r, 'a) t
+val ( |@> ) : ('d, 's, 'r, 'a) t -> 'r -> ('d, 's, 'r, 'a) t

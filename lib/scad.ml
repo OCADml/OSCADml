@@ -106,23 +106,23 @@ type scad =
       ; convexity : int
       }
 
-type ('space, 'rot, 'affine) t =
-  | D2 : scad -> (V2.t, float, Affine2.t) t
-  | D3 : scad -> (V3.t, V3.t, Affine3.t) t
+type ('dim, 'space, 'rot, 'affine) t =
+  | D2 : scad -> ([ `D2 ], V2.t, float, Affine2.t) t
+  | D3 : scad -> ([ `D3 ], V3.t, V3.t, Affine3.t) t
 
-type d2 = (V2.t, float, Affine2.t) t
-type d3 = (V3.t, V3.t, Affine3.t) t
+type d2 = ([ `D2 ], V2.t, float, Affine2.t) t
+type d3 = ([ `D3 ], V3.t, V3.t, Affine3.t) t
 
 let d2 scad = D2 scad
 let d3 scad = D3 scad
 let empty2 = D2 (Union [])
 let empty3 = D3 (Union [])
 
-let unpack : type s r a. (s, r, a) t -> scad = function
+let unpack : type d s r a. (d, s, r, a) t -> scad = function
   | D2 scad -> scad
   | D3 scad -> scad
 
-let map : type s r a. (scad -> scad) -> (s, r, a) t -> (s, r, a) t =
+let map : type d s r a. (scad -> scad) -> (d, s, r, a) t -> (d, s, r, a) t =
  fun f -> function
   | D2 scad -> D2 (f scad)
   | D3 scad -> D3 (f scad)
@@ -143,24 +143,24 @@ let text ?size ?font ?halign ?valign ?spacing ?direction ?language ?script ?fn t
   d2
   @@ Text { text; size; font; halign; valign; spacing; direction; language; script; fn }
 
-let translate (type s r a) (p : s) : (s, r, a) t -> (s, r, a) t = function
+let translate (type d s r a) (p : s) : (d, s, r, a) t -> (d, s, r, a) t = function
   | D2 scad -> d2 @@ Translate (V3.of_v2 p, scad)
   | D3 scad -> d3 @@ Translate (p, scad)
 
-let xtrans (type s r a) x : (s, r, a) t -> (s, r, a) t = function
+let xtrans (type d s r a) x : (d, s, r, a) t -> (d, s, r, a) t = function
   | D2 scad -> d2 @@ Translate (v3 x 0. 0., scad)
   | D3 scad -> d3 @@ Translate (v3 x 0. 0., scad)
 
-let ytrans (type s r a) y : (s, r, a) t -> (s, r, a) t = function
+let ytrans (type d s r a) y : (d, s, r, a) t -> (d, s, r, a) t = function
   | D2 scad -> d2 @@ Translate (v3 0. y 0., scad)
   | D3 scad -> d3 @@ Translate (v3 0. y 0., scad)
 
 let[@inline] ztrans z t = translate (v3 0. 0. z) t
 
-let rotate : type s r a. ?about:s -> r -> (s, r, a) t -> (s, r, a) t =
+let rotate : type d s r a. ?about:s -> r -> (d, s, r, a) t -> (d, s, r, a) t =
  fun ?about r t ->
-  let aux : (s, r, a) t -> (s, r, a) t = function
-    | D2 scad -> d2 @@ Rotate ({ x = 0.; y = 0.; z = r }, scad)
+  let aux : (d, s, r, a) t -> (d, s, r, a) t = function
+    | D2 scad -> d2 @@ Rotate (v3 0. 0. r, scad)
     | D3 scad -> d3 @@ Rotate (r, scad)
   in
   match about with
@@ -176,7 +176,7 @@ let rotate : type s r a. ?about:s -> r -> (s, r, a) t -> (s, r, a) t =
 let[@inline] xrot ?about x t = rotate ?about (v3 x 0. 0.) t
 let[@inline] yrot ?about y t = rotate ?about (v3 0. y 0.) t
 
-let zrot : type s r a. ?about:s -> float -> (s, r, a) t -> (s, r, a) t =
+let zrot : type d s r a. ?about:s -> float -> (d, s, r, a) t -> (d, s, r, a) t =
  fun ?about z t ->
   match t with
   | D2 _ -> rotate ?about z t
@@ -188,7 +188,7 @@ let axis_rotate ?about ax r t =
   | Some p -> translate (V3.neg p) t |> aux |> translate p
   | None -> aux t
 
-let affine (type s r a) (m : a) : (s, r, a) t -> (s, r, a) t = function
+let affine (type d s r a) (m : a) : (d, s, r, a) t -> (d, s, r, a) t = function
   | D2 scad -> d2 @@ MultMatrix (Affine2.lift m, scad)
   | D3 scad -> d3 @@ MultMatrix (m, scad)
 
@@ -208,7 +208,7 @@ let empty_exn n =
        n
        n )
 
-let union : type s r a. (s, r, a) t list -> (s, r, a) t =
+let union : type d s r a. (d, s, r, a) t list -> (d, s, r, a) t =
  fun ts ->
   match ts with
   | D2 _ :: _ -> union2 ts
@@ -217,14 +217,14 @@ let union : type s r a. (s, r, a) t list -> (s, r, a) t =
 
 let add a b = union [ a; b ]
 
-let difference (type s r a) (t : (s, r, a) t) (sub : (s, r, a) t list) =
+let difference (type d s r a) (t : (d, s, r, a) t) (sub : (d, s, r, a) t list) =
   map (fun scad -> Difference (scad, List.map unpack sub)) t
 
 let sub a b = difference a [ b ]
 let intersection2 ts = d2 @@ Intersection (List.map unpack ts)
 let intersection3 ts = d3 @@ Intersection (List.map unpack ts)
 
-let intersection : type s r a. (s, r, a) t list -> (s, r, a) t =
+let intersection : type d s r a. (d, s, r, a) t list -> (d, s, r, a) t =
  fun ts ->
   match ts with
   | D2 _ :: _ -> intersection2 ts
@@ -234,7 +234,7 @@ let intersection : type s r a. (s, r, a) t list -> (s, r, a) t =
 let hull2 ts = d2 @@ Hull (List.map unpack ts)
 let hull3 ts = d3 @@ Hull (List.map unpack ts)
 
-let hull : type s r a. (s, r, a) t list -> (s, r, a) t =
+let hull : type d s r a. (d, s, r, a) t list -> (d, s, r, a) t =
  fun ts ->
   match ts with
   | D2 _ :: _ -> hull2 ts
@@ -244,7 +244,7 @@ let hull : type s r a. (s, r, a) t list -> (s, r, a) t =
 let minkowski2 ts = d2 @@ Minkowski (List.map unpack ts)
 let minkowski3 ts = d3 @@ Minkowski (List.map unpack ts)
 
-let minkowski : type s r a. (s, r, a) t list -> (s, r, a) t =
+let minkowski : type d s r a. (d, s, r, a) t list -> (d, s, r, a) t =
  fun ts ->
   match ts with
   | D2 _ :: _ -> minkowski2 ts
@@ -254,7 +254,7 @@ let minkowski : type s r a. (s, r, a) t list -> (s, r, a) t =
 let polyhedron ?(convexity = 10) points faces =
   d3 @@ Polyhedron { points; faces; convexity }
 
-let mirror (type s r a) (ax : s) : (s, r, a) t -> (s, r, a) t = function
+let mirror (type d s r a) (ax : s) : (d, s, r, a) t -> (d, s, r, a) t = function
   | D2 scad -> d2 @@ Mirror (V3.of_v2 ax, scad)
   | D3 scad -> d3 @@ Mirror (ax, scad)
 
@@ -276,21 +276,21 @@ let extrude
 let revolve ?angle ?(convexity = 10) ?fa ?fs ?fn (D2 scad) =
   d3 @@ RotateExtrude { scad; angle; convexity; fa; fs; fn }
 
-let scale (type s r a) (factors : s) : (s, r, a) t -> (s, r, a) t = function
+let scale (type d s r a) (factors : s) : (d, s, r, a) t -> (d, s, r, a) t = function
   | D2 scad -> d2 @@ Scale (V3.of_v2 factors, scad)
   | D3 scad -> d3 @@ Scale (factors, scad)
 
-let xscale (type s r a) x : (s, r, a) t -> (s, r, a) t = function
+let xscale (type d s r a) x : (d, s, r, a) t -> (d, s, r, a) t = function
   | D2 scad -> d2 @@ Scale (v3 x 1. 1., scad)
   | D3 scad -> d3 @@ Scale (v3 x 1. 1., scad)
 
-let yscale (type s r a) y : (s, r, a) t -> (s, r, a) t = function
+let yscale (type d s r a) y : (d, s, r, a) t -> (d, s, r, a) t = function
   | D2 scad -> d2 @@ Scale (v3 1. y 1., scad)
   | D3 scad -> d3 @@ Scale (v3 1. y 1., scad)
 
 let[@inline] zscale z t = scale (v3 1. 1. z) t
 
-let resize (type s r a) (new_dims : s) : (s, r, a) t -> (s, r, a) t = function
+let resize (type d s r a) (new_dims : s) : (d, s, r, a) t -> (d, s, r, a) t = function
   | D2 scad -> d2 @@ Resize (V3.of_v2 new_dims, scad)
   | D3 scad -> d3 @@ Resize (new_dims, scad)
 
@@ -367,19 +367,19 @@ let to_string t =
     buf_add_list b f l;
     b
   and buf_add_idxs b = buf_add_list b (fun b' i -> Buffer.add_string b' (Int.to_string i))
-  and buf_add_vec2 b { x; y } =
+  and buf_add_vec2 b p =
     Buffer.add_char b '[';
-    Buffer.add_string b (Float.to_string x);
+    Buffer.add_string b (Float.to_string @@ V2.x p);
     Buffer.add_char b ',';
-    Buffer.add_string b (Float.to_string y);
+    Buffer.add_string b (Float.to_string @@ V2.y p);
     Buffer.add_char b ']'
-  and buf_add_vec3 b { x; y; z } =
+  and buf_add_vec3 b p =
     Buffer.add_char b '[';
-    Buffer.add_string b (Float.to_string x);
+    Buffer.add_string b (Float.to_string @@ V3.x p);
     Buffer.add_char b ',';
-    Buffer.add_string b (Float.to_string y);
+    Buffer.add_string b (Float.to_string @@ V3.y p);
     Buffer.add_char b ',';
-    Buffer.add_string b (Float.to_string z);
+    Buffer.add_string b (Float.to_string @@ V3.z p);
     Buffer.add_char b ']'
   and maybe_fmt fmt opt = Util.value_map_opt (Printf.sprintf fmt) ~default:"" opt
   and string_of_f_ fa fs (fn : int option) =
@@ -404,11 +404,16 @@ let to_string t =
         r2
         center
         (string_of_f_ fa fs fn)
-    | Cube { size = { x; y; z }; center } ->
+    | Cube { size; center } ->
+      let x = V3.x size
+      and y = V3.y size
+      and z = V3.z size in
       Printf.sprintf "%scube(size=[%f, %f, %f], center=%B);\n" indent x y z center
     | Sphere { r; fa; fs; fn } ->
       Printf.sprintf "%ssphere(%f%s);\n" indent r (string_of_f_ fa fs fn)
-    | Square { size = { x; y }; center } ->
+    | Square { size; center } ->
+      let x = V2.x size
+      and y = V2.y size in
       Printf.sprintf "%ssquare(size=[%f, %f], center=%B);\n" indent x y center
     | Circle { r; fa; fs; fn } ->
       Printf.sprintf "%scircle(%f%s);\n" indent r (string_of_f_ fa fs fn)
@@ -498,13 +503,13 @@ let to_string t =
         (Buffer.contents @@ buf_of_list buf_add_vec3 points)
         (Buffer.contents @@ buf_of_list buf_add_idxs faces)
         convexity
-    | Mirror ({ x; y; z }, scad) ->
+    | Mirror (ax, scad) ->
       Printf.sprintf
         "%smirror(v=[%f, %f, %f])\n%s"
         indent
-        x
-        y
-        z
+        (V3.x ax)
+        (V3.y ax)
+        (V3.z ax)
         (print (Printf.sprintf "%s\t" indent) scad)
     | Projection { scad; cut } ->
       Printf.sprintf
@@ -513,8 +518,7 @@ let to_string t =
         cut
         (print (Printf.sprintf "%s\t" indent) scad)
         indent
-    | LinearExtrude
-        { scad; height; center; convexity; twist; slices; scale = { x; y }; fn } ->
+    | LinearExtrude { scad; height; center; convexity; twist; slices; scale; fn } ->
       Printf.sprintf
         "%slinear_extrude(height=%f, center=%B, convexity=%d, %sslices=%d, scale=[%f, \
          %f], $fn=%d)\n\
@@ -525,8 +529,8 @@ let to_string t =
         convexity
         (maybe_fmt "twist=%d, " twist)
         slices
-        x
-        y
+        (V2.x scale)
+        (V2.y scale)
         fn
         (print (Printf.sprintf "%s\t" indent) scad)
     | RotateExtrude { scad; angle; convexity; fa; fs; fn } ->
@@ -602,7 +606,7 @@ let to_file ?(incl = false) path t =
   in
   Out_channel.with_open_text model_path (fun oc -> Printf.fprintf oc "%s" (to_string t))
 
-let export (type s r a) path (t : (s, r, a) t) =
+let export (type d s r a) path (t : (d, s, r, a) t) =
   let space, allowed =
     match t with
     | D2 _ -> "2D", Export.d2_exts

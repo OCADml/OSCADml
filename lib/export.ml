@@ -128,20 +128,28 @@ let camera_to_args = function
   | Auto -> [| "--autocenter" |]
   | Gimbal { translation = t; rotation = r; distance = `D d } ->
     let r = V3.deg_of_rad r in
-    [| "--camera"; Printf.sprintf "%f,%f,%f,%f,%f,%f,%f" t.x t.y t.z r.x r.y r.z d |]
+    V3.
+      [| "--camera"
+       ; Printf.sprintf "%f,%f,%f,%f,%f,%f,%f" (x t) (y t) (z t) (x r) (y r) (z r) d
+      |]
   | Gimbal { translation = t; rotation = r; distance = `Auto } ->
     let r = V3.deg_of_rad r in
-    [| "--camera"
-     ; Printf.sprintf "%f,%f,%f,%f,%f,%f,%f" t.x t.y t.z r.x r.y r.z 0.
-     ; "--viewall"
-    |]
+    V3.
+      [| "--camera"
+       ; Printf.sprintf "%f,%f,%f,%f,%f,%f,%f" (x t) (y t) (z t) (x r) (y r) (z r) 0.
+       ; "--viewall"
+      |]
   | Eye { lens = l; center = c; view_all = false } ->
-    [| "--camera"; Printf.sprintf "%f,%f,%f,%f,%f,%f" l.x l.y l.z c.x c.y c.z |]
+    V3.
+      [| "--camera"
+       ; Printf.sprintf "%f,%f,%f,%f,%f,%f" (x l) (y l) (z l) (x c) (y c) (z c)
+      |]
   | Eye { lens = l; center = c; view_all = true } ->
-    [| "--camera"
-     ; Printf.sprintf "%f,%f,%f,%f,%f,%f" l.x l.y l.z c.x c.y c.z
-     ; "--viewall"
-    |]
+    V3.
+      [| "--camera"
+       ; Printf.sprintf "%f,%f,%f,%f,%f,%f" (x l) (y l) (z l) (x c) (y c) (z c)
+       ; "--viewall"
+      |]
 
 let colorscheme_to_string = function
   | Cornfield -> "Cornfield"
