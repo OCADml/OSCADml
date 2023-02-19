@@ -46,12 +46,13 @@ viewer](https://openscad.org/downloads.html) as you normally would.
 ## Documentation
 
 Documentation for OSCADml is available
-[online](https://ocadml.github.io/OSCADml/OSCADml/index.html), covering the
-[API](https://ocadml.github.io/OSCADml/OSCADml/index.html#api)
-as well as some walkthrough style
+[online](https://ocadml.github.io/OSCADml/OSCADml/index.html) and offline via
+[odig](https://erratique.ch/software/odig), covering the
+[API](https://ocadml.github.io/OSCADml/OSCADml/index.html#api) as well as some
+walkthrough style
 [examples](https://ocadml.github.io/OSCADml/OSCADml/index.html#examples).
-Referring to the [manual](https://ocadml.github.io/OCADml/OCADml/index.html)
-for [OCADml](https://github.com/OCADml/OCADml) is also likely to be helpful.
+Referring to the [manual](https://ocadml.github.io/OCADml/OCADml/index.html) for
+[OCADml](https://github.com/OCADml/OCADml) is also likely to be helpful.
 
 ## Companion PPX
 
