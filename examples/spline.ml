@@ -29,6 +29,6 @@ let () = Scad.to_file "spline.scad" (Scad.union [ line; marks ])
 
 (** {%html:
     <p style="text-align:center;">
-    <img src="../_assets/spline.png" style="width:150mm;"/>
+    <img src="_assets/spline.png" style="width:150mm;"/>
     </p> %}
     *)

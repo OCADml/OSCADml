@@ -26,7 +26,7 @@ let () =
 
 (** {%html:
     <p style="text-align:center;">
-    <img src="../_assets/tangent_morph_sweep.png" style="width:150mm;"/>
+    <img src="_assets/tangent_morph_sweep.png" style="width:150mm;"/>
     </p> %}
     *)
 
@@ -64,6 +64,6 @@ let () = Scad.to_file ~incl:true "eased_morph.scad" scad
 
 (** {%html:
     <p style="text-align:center;">
-    <img src="../_assets/eased_morph.png" style="width:150mm;"/>
+    <img src="_assets/eased_morph.png" style="width:150mm;"/>
     </p> %}
     *)

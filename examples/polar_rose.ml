@@ -35,6 +35,6 @@ let () = Scad.to_file ~incl:true "polar_rose.scad" (Scad.of_mesh mesh)
 
 (** {%html:
     <p style="text-align:center;">
-    <img src="../_assets/polar_rose.png" style="width:150mm;"/>
+    <img src="_assets/polar_rose.png" style="width:150mm;"/>
     </p> %}
     *)

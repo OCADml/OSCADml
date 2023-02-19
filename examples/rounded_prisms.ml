@@ -35,7 +35,7 @@ let () =
 
 (** {%html:
     <p style="text-align:center;">
-    <img src="../_assets/rounded_prism_star.png" style="width:150mm;"/>
+    <img src="_assets/rounded_prism_star.png" style="width:150mm;"/>
     </p> %}
     *)
 
@@ -82,6 +82,6 @@ let () = Scad.to_file "rounded_prism_tunnel.scad" (Scad.of_mesh tunnel)
 
 (** {%html:
     <p style="text-align:center;">
-    <img src="../_assets/rounded_prism_tunnel.png" style="width:150mm;"/>
+    <img src="_assets/rounded_prism_tunnel.png" style="width:150mm;"/>
     </p> %}
     *)

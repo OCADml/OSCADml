@@ -27,7 +27,7 @@ let () =
 
 (** {%html:
     <p style="text-align:center;">
-    <img src="../_assets/offset_poly.png" style="width:150mm;"/>
+    <img src="_assets/offset_poly.png" style="width:150mm;"/>
     </p> %}
     *)
 
@@ -52,7 +52,7 @@ let () =
 
 (** {%html:
     <p style="text-align:center;">
-    <img src="../_assets/circular_rounding.png" style="width:150mm;"/>
+    <img src="_assets/circular_rounding.png" style="width:150mm;"/>
     </p> %}
     *)
 

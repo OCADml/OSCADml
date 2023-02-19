@@ -30,7 +30,7 @@ let () =
 
 (** {%html:
     <p style="text-align:center;">
-    <img src="../_assets/bezier_spline_path.png" style="width:150mm;"/>
+    <img src="_assets/bezier_spline_path.png" style="width:150mm;"/>
     </p> %}
     *)
 
@@ -59,7 +59,7 @@ let () = Scad.to_file "chamfered_square_with_holes.scad" (Scad.of_poly2 poly)
 
 (** {%html:
     <p style="text-align:center;">
-    <img src="../_assets/chamfered_square_with_holes.png" style="width:150mm;"/>
+    <img src="_assets/chamfered_square_with_holes.png" style="width:150mm;"/>
     </p> %}
     *)
 
@@ -102,7 +102,7 @@ let () = Scad.to_file "rounded_polyhole_sweep.scad" (Scad.of_mesh mesh)
 
 (** {%html:
     <p style="text-align:center;">
-    <img src="../_assets/rounded_polyhole_sweep.png" style="width:150mm;"/>
+    <img src="_assets/rounded_polyhole_sweep.png" style="width:150mm;"/>
     </p> %}
     *)
 
@@ -134,6 +134,6 @@ let () =
 
 (** {%html:
     <p style="text-align:center;">
-    <img src="../_assets/chamfered_loop.png" style="width:150mm;"/>
+    <img src="_assets/chamfered_loop.png" style="width:150mm;"/>
     </p> %}
     *)

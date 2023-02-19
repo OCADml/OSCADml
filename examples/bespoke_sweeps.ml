@@ -36,7 +36,7 @@ let () = Scad.to_file "spiral.scad" @@ Scad.of_mesh @@ Mesh.sweep ~transforms sq
 
 (** {%html:
     <p style="text-align:center;">
-    <img src="../_assets/spiral.png" style="width:150mm;"/>
+    <img src="_assets/spiral.png" style="width:150mm;"/>
     </p> %}
     *)
 
@@ -61,6 +61,6 @@ let () =
 
 (** {%html:
     <p style="text-align:center;">
-    <img src="../_assets/wave_cylinder.png" style="width:150mm;"/>
+    <img src="_assets/wave_cylinder.png" style="width:150mm;"/>
     </p> %}
     *)

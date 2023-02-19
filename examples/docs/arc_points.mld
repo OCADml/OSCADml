@@ -24,7 +24,7 @@ let () =
 
 {%html:
 <p style="text-align:center;">
-<img src="../_assets/arc_points_2d.png" style="width:150mm;"/>
+<img src="_assets/arc_points_2d.png" style="width:150mm;"/>
 </p> %}
 
 Each of the arc drawing functions takes a [wedge] parameter that will
@@ -51,7 +51,7 @@ let () =
 
 {%html:
 <p style="text-align:center;">
-<img src="../_assets/arc_wedge_2d.png" style="width:150mm;"/>
+<img src="_assets/arc_wedge_2d.png" style="width:150mm;"/>
 </p> %}
 
 Arcs can also be drawn onto 3d planes other than xy. Here we define a
@@ -74,6 +74,6 @@ let () =
 
 {%html:
 <p style="text-align:center;">
-<img src="../_assets/arc_points_3d.png" style="width:150mm;"/>
+<img src="_assets/arc_points_3d.png" style="width:150mm;"/>
 </p> %}
 

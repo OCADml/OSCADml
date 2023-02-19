@@ -18,7 +18,7 @@ let () =
 
 {%html:
 <p style="text-align:center;">
-<img src="../_assets/helix_path_points.png" style="width:150mm;"/>
+<img src="_assets/helix_path_points.png" style="width:150mm;"/>
 </p> %}
 
 We'll use a simple elbow shape for our sweeps so that its orientation is
@@ -35,7 +35,7 @@ let () = Scad.(to_file "elbow.scad" (extrude ~height:1. @@ of_poly2 poly))
 
 {%html:
 <p style="text-align:center;">
-<img src="../_assets/elbow.png" style="width:150mm;"/>
+<img src="_assets/elbow.png" style="width:150mm;"/>
 </p> %}
 
 Sweep our [poly] along a left-handed helix, while halving its width, and doubling
@@ -52,6 +52,6 @@ let () =
 
 {%html:
 <p style="text-align:center;">
-<img src="../_assets/helix_extrude.png" style="width:150mm;"/>
+<img src="_assets/helix_extrude.png" style="width:150mm;"/>
 </p> %}
 
