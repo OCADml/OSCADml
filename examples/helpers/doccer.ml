@@ -36,7 +36,7 @@ let digest src =
   in
   let rec loop state =
     match input_line ic with
-    | line                  ->
+    | line ->
       let trimmed = String.trim line in
       let line_state =
         if String.starts_with ~prefix:"(**" trimmed
@@ -63,11 +63,11 @@ let digest src =
       loop state'
     | exception End_of_file ->
       ( match state with
-      | Some Code ->
-        Buffer.add_char block '\n';
-        dump_block true
-      | Some Doc  -> dump_block false
-      | None      -> () );
+        | Some Code ->
+          Buffer.add_char block '\n';
+          dump_block true
+        | Some Doc -> dump_block false
+        | None -> () );
       Buffer.output_buffer oc out
   in
   loop None;
@@ -78,5 +78,6 @@ let () =
   let oc = open_out "dune" in
   output_string oc "(documentation (package OSCADml))";
   close_out oc;
-  let f i = digest Sys.argv.(i + 1) in
-  List.init (Array.length Sys.argv - 1) (Thread.create f) |> List.iter Thread.join
+  for i = 1 to Array.length Sys.argv - 1 do
+    digest Sys.argv.(i)
+  done
