@@ -39,7 +39,7 @@ available.
     Scad.to_file "scad_logo.scad" scad_logo
 ]}
 
-{%html: <img src="../assets/scad_logo.png" style="width:125mm;" /> %}
+{%html: <img src="../_assets/scad_logo.png" style="width:125mm;" /> %}
 
 Generated [.scad] scripts can then be viewed with the
 {{:https://openscad.org/downloads.html} OpenSCAD viewer} as you normally would, or

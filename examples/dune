@@ -70,14 +70,16 @@
    "pngs"
    (run %{exporter} %{scads}))))
 
-(rule
- (alias doc)
- (deps
-  (:copier "../docs/copier.exe")
-  (:img
-   (glob_files pngs/*.png)))
- (action
-  (run %{copier} "../_doc/_html/assets" %{img})))
+; (rule
+;  (alias doc)
+;  (deps
+;   (:copier "../docs/copier.exe")
+;   (:img
+;    (glob_files pngs/*.png)))
+;  (action
+;   (progn
+;    (run %{copier} "../docs/odoc-assets" "--basename" %{img})
+;    (run %{copier} "../_doc/_html/_assets" "--basename" %{img}))))
 
 (rule
  (alias examples)

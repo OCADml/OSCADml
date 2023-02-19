@@ -10,6 +10,27 @@
   (:copier "copier.exe")
   (:img
    (glob_files assets/*.png)
-   (glob_files assets/*.jpg)))
+   (glob_files assets/*.jpg)
+   (glob_files ../examples/pngs/*.png)))
+ (targets
+  (dir "odoc-assets"))
  (action
-  (run %{copier} "../_doc/_html/assets" %{img})))
+  (progn
+   (run %{copier} "odoc-assets" "--basename" %{img})
+   (run %{copier} "../_doc/_html/_assets" "--basename" %{img}))))
+
+; (rule
+;  (alias doc)
+;  (deps
+;   (:copier "../docs/copier.exe")
+;   (:img
+;    (glob_files pngs/*.png)))
+;  (action
+;   (progn
+;    (run %{copier} "../docs/odoc-assets" "--basename" %{img})
+;    (run %{copier} "../_doc/_html/_assets" "--basename" %{img}))))
+
+(install
+ (files
+  (glob_files odoc-assets/*))
+ (section doc))

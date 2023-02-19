@@ -33,7 +33,7 @@ let () =
 
 (** {%html:
     <p style="text-align:center;">
-    <img src="../assets/vaccum_connector_points.png" style="width:150mm;"/>
+    <img src="../_assets/vaccum_connector_points.png" style="width:150mm;"/>
     </p> %}
     *)
 
@@ -44,7 +44,7 @@ let () =
 
 (** {%html:
     <p style="text-align:center;">
-    <img src="../assets/vaccum_connector.png" style="width:150mm;"/>
+    <img src="../_assets/vaccum_connector.png" style="width:150mm;"/>
     </p> %}
     *)
 

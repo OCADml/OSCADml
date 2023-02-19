@@ -43,7 +43,7 @@ let () = starburst ~euler:false (* default path transformations *)
 
 (** {%html:
     <p style="text-align:center;">
-    <img src="../assets/sweep_starburst_default.png" style="width:150mm;"/>
+    <img src="../_assets/sweep_starburst_default.png" style="width:150mm;"/>
     </p> %}
     *)
 
@@ -51,7 +51,7 @@ let () = starburst ~euler:true (* euler path transformations *)
 
 (** {%html:
     <p style="text-align:center;">
-    <img src="../assets/sweep_starburst_euler.png" style="width:150mm;"/>
+    <img src="../_assets/sweep_starburst_euler.png" style="width:150mm;"/>
     </p> %}
     *)
 
@@ -81,7 +81,7 @@ let () =
 
 (** {%html:
     <p style="text-align:center;">
-    <img src="../assets/sweep_path_default.png" style="width:150mm;"/>
+    <img src="../_assets/sweep_path_default.png" style="width:150mm;"/>
     </p> %}
     *)
 
@@ -96,6 +96,6 @@ let () =
 
 (** {%html:
     <p style="text-align:center;">
-    <img src="../assets/sweep_path_euler.png" style="width:150mm;"/>
+    <img src="../_assets/sweep_path_euler.png" style="width:150mm;"/>
     </p> %}
     *)

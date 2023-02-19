@@ -1,4 +1,4 @@
-(lang dune 3.3)
+(lang dune 3.6)
 
 (using directory-targets 0.1)
 
@@ -34,6 +34,8 @@
   (gg
    (>= 1.0.0))
   (cairo2
-   (>= 0.6.2))
+   (and
+    (>= 0.6.2)
+    :with-doc))
   (OCADml
    (>= 0.3.0))))

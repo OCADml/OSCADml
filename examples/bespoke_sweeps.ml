@@ -25,7 +25,7 @@ let transforms =
     Affine3.(
       mul
         (axis_rotate (v3 0. 0. 1.) (t *. Float.pi *. 40.))
-        (translate (v3 (10. +. (500. *. t)) 0. 0.)))
+        (translate (v3 (10. +. (500. *. t)) 0. 0.)) )
   in
   List.init (Int.of_float (1. /. step) + 1) f
 
@@ -36,7 +36,7 @@ let () = Scad.to_file "spiral.scad" @@ Scad.of_mesh @@ Mesh.sweep ~transforms sq
 
 (** {%html:
     <p style="text-align:center;">
-    <img src="../assets/spiral.png" style="width:150mm;"/>
+    <img src="../_assets/spiral.png" style="width:150mm;"/>
     </p> %}
     *)
 
@@ -53,7 +53,7 @@ let () =
     Affine3.(
       mul
         (mul (rotate (v3 (rad 90.) 0. (rad t))) (translate (v3 r 0. 0.)))
-        (scale (v3 1. (h +. (s *. Float.sin (rad (t *. 6.)))) 1.)))
+        (scale (v3 1. (h +. (s *. Float.sin (rad (t *. 6.)))) 1.)) )
   in
   Mesh.sweep ~transforms:(List.init ((360 / 4) + 1) f) (Poly2.square (v2 2. 1.))
   |> Scad.of_mesh
@@ -61,6 +61,6 @@ let () =
 
 (** {%html:
     <p style="text-align:center;">
-    <img src="../assets/wave_cylinder.png" style="width:150mm;"/>
+    <img src="../_assets/wave_cylinder.png" style="width:150mm;"/>
     </p> %}
     *)

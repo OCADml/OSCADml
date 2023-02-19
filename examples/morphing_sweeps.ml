@@ -17,8 +17,7 @@ let () =
     in
     Bezier3.curve ~fn:60 @@ Bezier3.of_path ~size:(`Flat (`Rel 0.3)) control
   and caps =
-    Mesh.Cap.(
-      capped ~bot:(round @@ circ (`Radius 0.5)) ~top:(round @@ circ (`Radius 0.5)))
+    Mesh.Cap.(capped ~bot:(round @@ circ (`Radius 0.5)) ~top:(round @@ circ (`Radius 0.5)))
   and a = Poly2.ring ~fn:5 ~thickness:(v2 2.5 2.5) (v2 6. 6.)
   and b = Poly2.ring ~fn:80 ~thickness:(v2 2. 2.) (v2 4. 4.) in
   Mesh.path_morph ~refine:2 ~caps ~path ~outer_map:`Tangent a b
@@ -27,7 +26,7 @@ let () =
 
 (** {%html:
     <p style="text-align:center;">
-    <img src="../assets/tangent_morph_sweep.png" style="width:150mm;"/>
+    <img src="../_assets/tangent_morph_sweep.png" style="width:150mm;"/>
     </p> %}
     *)
 
@@ -65,6 +64,6 @@ let () = Scad.to_file ~incl:true "eased_morph.scad" scad
 
 (** {%html:
     <p style="text-align:center;">
-    <img src="../assets/eased_morph.png" style="width:150mm;"/>
+    <img src="../_assets/eased_morph.png" style="width:150mm;"/>
     </p> %}
     *)

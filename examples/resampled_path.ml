@@ -25,7 +25,7 @@ let () =
 
 (** {%html:
     <p style="text-align:center;">
-    <img src="../assets/resampled_path.png" style="width:150mm;"/>
+    <img src="../_assets/resampled_path.png" style="width:150mm;"/>
     </p> %}
     *)
 
@@ -46,6 +46,6 @@ let () =
 
 (** {%html:
     <p style="text-align:center;">
-    <img src="../assets/scaling_twister_extrude.png" style="width:150mm;"/>
+    <img src="../_assets/scaling_twister_extrude.png" style="width:150mm;"/>
     </p> %}
     *)

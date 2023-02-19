@@ -3,6 +3,4 @@ _opam/
 .merlin
 _esy/
 
-examples/docs/*.mld
-examples/pngs
 examples/scads

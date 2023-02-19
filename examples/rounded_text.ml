@@ -29,6 +29,6 @@ let () = List.map extruder hello |> Scad.union |> Scad.to_file "rounded_text.sca
 
 (** {%html:
     <p style="text-align:center;">
-    <img src="../assets/rounded_text.png" style="width:150mm;"/>
+    <img src="../_assets/rounded_text.png" style="width:150mm;"/>
     </p> %}
     *)

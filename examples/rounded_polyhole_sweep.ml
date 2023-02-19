@@ -30,7 +30,7 @@ let () =
 
 (** {%html:
     <p style="text-align:center;">
-    <img src="../assets/bezier_spline_path.png" style="width:150mm;"/>
+    <img src="../_assets/bezier_spline_path.png" style="width:150mm;"/>
     </p> %}
     *)
 
@@ -59,7 +59,7 @@ let () = Scad.to_file "chamfered_square_with_holes.scad" (Scad.of_poly2 poly)
 
 (** {%html:
     <p style="text-align:center;">
-    <img src="../assets/chamfered_square_with_holes.png" style="width:150mm;"/>
+    <img src="../_assets/chamfered_square_with_holes.png" style="width:150mm;"/>
     </p> %}
     *)
 
@@ -90,7 +90,7 @@ let caps =
   Mesh.Cap.(
     capped
       ~bot:(round ~holes:`Same @@ chamf ~height:(-1.2) ~angle:(Float.pi /. 8.) ())
-      ~top:(round @@ circ (`Radius 0.5)))
+      ~top:(round @@ circ (`Radius 0.5)) )
 
 (** Extrude [poly] along [path], with rounding over the end caps according to
     [caps] using {{!OCADml.Mesh.path_extrude} [Mesh.path_extrude]}. *)
@@ -102,7 +102,7 @@ let () = Scad.to_file "rounded_polyhole_sweep.scad" (Scad.of_mesh mesh)
 
 (** {%html:
     <p style="text-align:center;">
-    <img src="../assets/rounded_polyhole_sweep.png" style="width:150mm;"/>
+    <img src="../_assets/rounded_polyhole_sweep.png" style="width:150mm;"/>
     </p> %}
     *)
 
@@ -116,7 +116,7 @@ let rounded_path =
     @@ Round.flat
          ~closed:true
          ~corner:(Round.circ (`Radius 10.))
-         (v3 (-25.) 25. 0. :: Path3.square (v2 50. 50.)))
+         (v3 (-25.) 25. 0. :: Path3.square (v2 50. 50.)) )
 
 (** {{!OCADml.Mesh.path_extrude} [Mesh.path_extrude]} (and other functions
     derived from [Mesh.sweep]) can be given [~caps:`Looped], which will connect
@@ -134,6 +134,6 @@ let () =
 
 (** {%html:
     <p style="text-align:center;">
-    <img src="../assets/chamfered_loop.png" style="width:150mm;"/>
+    <img src="../_assets/chamfered_loop.png" style="width:150mm;"/>
     </p> %}
     *)
