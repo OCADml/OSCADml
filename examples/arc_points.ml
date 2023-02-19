@@ -16,7 +16,7 @@ let () =
 
 (** {%html:
     <p style="text-align:center;">
-    <img src="../assets/arc_points_2d.png" style="width:150mm;"/>
+    <img src="_assets/arc_points_2d.png" style="width:150mm;"/>
     </p> %}
     *)
 
@@ -41,7 +41,7 @@ let () =
 
 (** {%html:
     <p style="text-align:center;">
-    <img src="../assets/arc_wedge_2d.png" style="width:150mm;"/>
+    <img src="_assets/arc_wedge_2d.png" style="width:150mm;"/>
     </p> %}
     *)
 
@@ -62,6 +62,6 @@ let () =
 
 (** {%html:
     <p style="text-align:center;">
-    <img src="../assets/arc_points_3d.png" style="width:150mm;"/>
+    <img src="_assets/arc_points_3d.png" style="width:150mm;"/>
     </p> %}
     *)

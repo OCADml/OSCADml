@@ -24,6 +24,6 @@ let () =
 
 (** {%html:
     <p style="text-align:center;">
-    <img src="../assets/axial_chalice.png" style="width:150mm;"/>
+    <img src="_assets/axial_chalice.png" style="width:150mm;"/>
     </p> %}
     *)

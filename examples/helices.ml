@@ -13,7 +13,7 @@ let () =
 
 (** {%html:
     <p style="text-align:center;">
-    <img src="../assets/helix_path_points.png" style="width:150mm;"/>
+    <img src="_assets/helix_path_points.png" style="width:150mm;"/>
     </p> %}
     *)
 
@@ -28,7 +28,7 @@ let () = Scad.(to_file "elbow.scad" (extrude ~height:1. @@ of_poly2 poly))
 
 (** {%html:
     <p style="text-align:center;">
-    <img src="../assets/elbow.png" style="width:150mm;"/>
+    <img src="_assets/elbow.png" style="width:150mm;"/>
     </p> %}
     *)
 
@@ -43,6 +43,6 @@ let () =
 
 (** {%html:
     <p style="text-align:center;">
-    <img src="../assets/helix_extrude.png" style="width:150mm;"/>
+    <img src="_assets/helix_extrude.png" style="width:150mm;"/>
     </p> %}
     *)

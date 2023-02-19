@@ -10,6 +10,16 @@
   (:copier "copier.exe")
   (:img
    (glob_files assets/*.png)
-   (glob_files assets/*.jpg)))
+   (glob_files assets/*.jpg)
+   (glob_files ../examples/pngs/*.png)))
+ (targets
+  (dir "odoc-assets"))
  (action
-  (run %{copier} "../_doc/_html/assets" %{img})))
+  (progn
+   (run %{copier} "odoc-assets" "--basename" %{img})
+   (run %{copier} "../_doc/_html/OSCADml/_assets" "--basename" %{img}))))
+
+(install
+ (files
+  (glob_files odoc-assets/*))
+ (section doc))

@@ -16,7 +16,7 @@
   default_vs_euler_sweeps
   profile_skinning
   morphing_sweeps)
- (libraries OSCADml))
+ (libraries OSCADml OCADml.PolyText))
 
 ; Convenience rule/alias for building and running examples (promoted to examples/scads diectory)
 ; This pattern enables automatic scad re-generation on changes with `dune build -w @run`.
@@ -69,15 +69,6 @@
   (chdir
    "pngs"
    (run %{exporter} %{scads}))))
-
-(rule
- (alias doc)
- (deps
-  (:copier "../docs/copier.exe")
-  (:img
-   (glob_files pngs/*.png)))
- (action
-  (run %{copier} "../_doc/_html/assets" %{img})))
 
 (rule
  (alias examples)
