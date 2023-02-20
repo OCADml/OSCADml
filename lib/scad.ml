@@ -261,14 +261,14 @@ let mirror (type d s r a) (ax : s) : (d, s, r, a) t -> (d, s, r, a) t = function
 let projection ?(cut = false) (D3 scad) = d2 @@ Projection { scad; cut }
 
 let extrude
-    ?(height = 10.)
-    ?(center = false)
-    ?(convexity = 10)
-    ?twist
-    ?(slices = 20)
-    ?(scale = v2 1. 1.)
-    ?(fn = 16)
-    (D2 scad)
+  ?(height = 10.)
+  ?(center = false)
+  ?(convexity = 10)
+  ?twist
+  ?(slices = 20)
+  ?(scale = v2 1. 1.)
+  ?(fn = 16)
+  (D2 scad)
   =
   if height <= 0. then invalid_arg "Extrusion height must be positive.";
   d3 @@ LinearExtrude { scad; height; center; convexity; twist; slices; scale; fn }
@@ -327,7 +327,9 @@ let color ?alpha color = map (fun scad -> Color { scad; color; alpha })
 let render ?(convexity = 10) = map (fun scad -> Render { scad; convexity })
 let of_path2 ?convexity t = polygon ?convexity t
 
-let of_poly2 ?convexity Poly2.{ outer; holes } =
+let of_poly2 ?convexity poly =
+  let outer = Poly2.outer poly
+  and holes = Poly2.holes poly in
   match holes with
   | [] -> polygon ?convexity outer
   | holes ->
@@ -558,9 +560,9 @@ let to_string t =
         "%soffset(%s)\n%s"
         indent
         ( match mode with
-        | `Radius -> Printf.sprintf "r = %f" d
-        | `Delta -> Printf.sprintf "delta = %f" d
-        | `Chamfer -> Printf.sprintf "delta = %f, chamfer=true" d )
+          | `Radius -> Printf.sprintf "r = %f" d
+          | `Delta -> Printf.sprintf "delta = %f" d
+          | `Chamfer -> Printf.sprintf "delta = %f, chamfer=true" d )
         (print (Printf.sprintf "%s\t" indent) scad)
     | Import2 { file; convexity; layer; ext } ->
       let layer =

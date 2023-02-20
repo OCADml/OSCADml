@@ -36,10 +36,10 @@ let () =
     [Path3.Round]} modules respectively. For this example, we'll use the
     {{!OCADml.Path2.Round.circles} [Path2.Round.circles]} constructor to
     create our circular roundover specification with different [radii] assigned
-    to each point of the input path [poly.outer]. *)
+    to each point of the input path [Poly2.outer poly]. *)
 let shape_spec =
   let radii = [ 1.; 1.5; 0.1; 10.; 0.8; 10. ] in
-  Path2.Round.circles ~kind:`Radius (List.combine poly.outer radii)
+  Path2.Round.circles ~kind:`Radius (List.combine (Poly2.outer poly) radii)
 
 (** Then we'll apply our {{!OCADml.Path2.Round.t} [Path2.Round.t]} [shape_spec]
     with {{!OCADml.Path2.roundover} [Path2.roundover]}, with [fn] segments per
