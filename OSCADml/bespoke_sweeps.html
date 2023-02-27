@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"><head><title>bespoke_sweeps (OSCADml.bespoke_sweeps)</title><link rel="stylesheet" href="../odoc.css"/><meta charset="utf-8"/><meta name="generator" content="odoc 2.2.0"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><script src="../highlight.pack.js"></script><script>hljs.initHighlightingOnLoad();</script></head><body class="odoc"><nav class="odoc-nav"><a href="index.html">Up</a> – <a href="index.html">OSCADml</a> &#x00BB; bespoke_sweeps</nav><header class="odoc-preamble"><h1 id="bespoke-sweeps"><a href="#bespoke-sweeps" class="anchor"></a>Bespoke Sweeps</h1><pre class="language-ocaml"><code>open OCADml
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>bespoke_sweeps (OSCADml.bespoke_sweeps)</title><link rel="stylesheet" href="../_odoc_support/odoc.css"/><meta charset="utf-8"/><meta name="generator" content="odoc 2.2.0"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><script src="../_odoc_support/highlight.pack.js"></script><script>hljs.initHighlightingOnLoad();</script></head><body class="odoc"><nav class="odoc-nav"><a href="index.html">Up</a> – <a href="index.html">OSCADml</a> &#x00BB; bespoke_sweeps</nav><header class="odoc-preamble"><h1 id="bespoke-sweeps"><a href="#bespoke-sweeps" class="anchor"></a>Bespoke Sweeps</h1><pre class="language-ocaml"><code>open OCADml
 open OSCADml</code></pre><p>Sometimes one may need more control than what <span class="xref-unresolved"><code>Path3.to_transforms</code></span> (and by extension <span class="xref-unresolved"><code>Mesh.path_extrude</code></span>) provide. For instance, as demonstrated below with the <a href="#wavey">wavey cylinder</a>, when non-monotonic scaling throughout a sweep is desired. In those scenarios, generating/composing lists of <span class="xref-unresolved"><code>Affine3.t</code></span> by other means and giving those to <span class="xref-unresolved"><code>Mesh.sweep</code></span> is an option.</p></header><nav class="odoc-toc"><ul><li><a href="#flat-spiral">Flat Spiral</a></li><li><a href="#wavey">Wavey Hollow Cylinder</a></li></ul></nav><div class="odoc-content"><h2 id="flat-spiral"><a href="#flat-spiral" class="anchor"></a>Flat Spiral</h2><p>A plain, centred square with which to draw our spiral.</p><pre class="language-ocaml"><code>let square = Poly2.square ~center:true (v2 10. 10.)</code></pre><p>A series of affine transformation matrices describing a spiral.</p><pre class="language-ocaml"><code>let transforms =
   let step = 0.001 in
   let f i =
@@ -7,11 +7,11 @@ open OSCADml</code></pre><p>Sometimes one may need more control than what <span 
     Affine3.(
       mul
         (axis_rotate (v3 0. 0. 1.) (t *. Float.pi *. 40.))
-        (translate (v3 (10. +. (500. *. t)) 0. 0.)))
+        (translate (v3 (10. +. (500. *. t)) 0. 0.)) )
   in
   List.init (Int.of_float (1. /. step) + 1) f</code></pre><p><span class="xref-unresolved"><code>Mesh.sweep</code></span> applies each of the transforms to <code>square</code> in its <i>original</i> state, linking up each resulting loop of points with the next to form a mesh that we can convert into an OpenSCAD polyhedron.</p><pre class="language-ocaml"><code>let () = Scad.to_file &quot;spiral.scad&quot; @@ Scad.of_mesh @@ Mesh.sweep ~transforms square</code></pre>
 <p style="text-align:center;">
-<img src="../assets/spiral.png" style="width:150mm;"/>
+<img src="_assets/spiral.png" style="width:150mm;"/>
 </p> <h2 id="wavey"><a href="#wavey" class="anchor"></a>Wavey Hollow Cylinder</h2><pre class="language-ocaml"><code>let () =
   let r = 10.
   and h = 20.
@@ -23,11 +23,11 @@ open OSCADml</code></pre><p>Sometimes one may need more control than what <span 
     Affine3.(
       mul
         (mul (rotate (v3 (rad 90.) 0. (rad t))) (translate (v3 r 0. 0.)))
-        (scale (v3 1. (h +. (s *. Float.sin (rad (t *. 6.)))) 1.)))
+        (scale (v3 1. (h +. (s *. Float.sin (rad (t *. 6.)))) 1.)) )
   in
   Mesh.sweep ~transforms:(List.init ((360 / 4) + 1) f) (Poly2.square (v2 2. 1.))
   |&gt; Scad.of_mesh
   |&gt; Scad.to_file &quot;wave_cylinder.scad&quot;</code></pre>
 <p style="text-align:center;">
-<img src="../assets/wave_cylinder.png" style="width:150mm;"/>
+<img src="_assets/wave_cylinder.png" style="width:150mm;"/>
 </p> </div></body></html>

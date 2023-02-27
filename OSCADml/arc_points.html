@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"><head><title>arc_points (OSCADml.arc_points)</title><link rel="stylesheet" href="../odoc.css"/><meta charset="utf-8"/><meta name="generator" content="odoc 2.2.0"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><script src="../highlight.pack.js"></script><script>hljs.initHighlightingOnLoad();</script></head><body class="odoc"><nav class="odoc-nav"><a href="index.html">Up</a> – <a href="index.html">OSCADml</a> &#x00BB; arc_points</nav><header class="odoc-preamble"><h1 id="arcing-paths"><a href="#arcing-paths" class="anchor"></a>Arcing paths</h1><pre class="language-ocaml"><code>open OCADml
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>arc_points (OSCADml.arc_points)</title><link rel="stylesheet" href="../_odoc_support/odoc.css"/><meta charset="utf-8"/><meta name="generator" content="odoc 2.2.0"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><script src="../_odoc_support/highlight.pack.js"></script><script>hljs.initHighlightingOnLoad();</script></head><body class="odoc"><nav class="odoc-nav"><a href="index.html">Up</a> – <a href="index.html">OSCADml</a> &#x00BB; arc_points</nav><header class="odoc-preamble"><h1 id="arcing-paths"><a href="#arcing-paths" class="anchor"></a>Arcing paths</h1><pre class="language-ocaml"><code>open OCADml
 open OSCADml</code></pre><p>A numbered marker function for <a href="OSCADml/Debug/index.html#val-show_path2"><code>Debug.show_path2</code></a> and <a href="OSCADml/Debug/index.html#val-show_path3"><code>Debug.show_path3</code></a> that we can use to visualize our arcs (and their ordering).</p><pre class="language-ocaml"><code>let show i = Scad.extrude ~height:1. (Scad.text ~size:2. (Printf.sprintf &quot;%i&quot; i))</code></pre><p>Draw an arcing path of <code>fn</code> points on the xy plane through the points describing a triangle.</p><pre class="language-ocaml"><code>let () =
   let arc = Path2.arc_through ~fn:5 (v2 0. (-10.)) (v2 10. 0.) (v2 0. 10.) in
   Scad.to_file &quot;arc_points_2d.scad&quot; (Debug.show_path2 show arc)</code></pre>
 <p style="text-align:center;">
-<img src="../assets/arc_points_2d.png" style="width:150mm;"/>
+<img src="_assets/arc_points_2d.png" style="width:150mm;"/>
 </p> <p>Each of the arc drawing functions takes a <code>wedge</code> parameter that will include the centre point of the arc at the end of the path when <code>true</code>.</p><pre class="language-ocaml"><code>let () =
   let arc =
     Path2.arc_about_centre
@@ -22,7 +22,7 @@ open OSCADml</code></pre><p>A numbered marker function for <a href="OSCADml/Debu
   in
   Scad.to_file &quot;arc_wedge_2d.scad&quot; @@ Scad.union [ wedge; marks ]</code></pre>
 <p style="text-align:center;">
-<img src="../assets/arc_wedge_2d.png" style="width:150mm;"/>
+<img src="_assets/arc_wedge_2d.png" style="width:150mm;"/>
 </p> <p>Arcs can also be drawn onto 3d planes other than xy. Here we define a <code>plane</code> from a normal vector, and draw an <code>arc</code> of <code>pi /. 1.5</code> around the origin from the angle <code>start</code> onto it.</p><pre class="language-ocaml"><code>let () =
   let arc =
     Path3.arc
@@ -35,5 +35,5 @@ open OSCADml</code></pre><p>A numbered marker function for <a href="OSCADml/Debu
   in
   Scad.to_file &quot;arc_points_3d.scad&quot; (Debug.show_path3 show arc)</code></pre>
 <p style="text-align:center;">
-<img src="../assets/arc_points_3d.png" style="width:150mm;"/>
+<img src="_assets/arc_points_3d.png" style="width:150mm;"/>
 </p> </header><div class="odoc-content"></div></body></html>

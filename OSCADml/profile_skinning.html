@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"><head><title>profile_skinning (OSCADml.profile_skinning)</title><link rel="stylesheet" href="../odoc.css"/><meta charset="utf-8"/><meta name="generator" content="odoc 2.2.0"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><script src="../highlight.pack.js"></script><script>hljs.initHighlightingOnLoad();</script></head><body class="odoc"><nav class="odoc-nav"><a href="index.html">Up</a> – <a href="index.html">OSCADml</a> &#x00BB; profile_skinning</nav><header class="odoc-preamble"><h1 id="profile-skinning"><a href="#profile-skinning" class="anchor"></a>Profile Skinning</h1><pre class="language-ocaml"><code>open OCADml
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>profile_skinning (OSCADml.profile_skinning)</title><link rel="stylesheet" href="../_odoc_support/odoc.css"/><meta charset="utf-8"/><meta name="generator" content="odoc 2.2.0"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><script src="../_odoc_support/highlight.pack.js"></script><script>hljs.initHighlightingOnLoad();</script></head><body class="odoc"><nav class="odoc-nav"><a href="index.html">Up</a> – <a href="index.html">OSCADml</a> &#x00BB; profile_skinning</nav><header class="odoc-preamble"><h1 id="profile-skinning"><a href="#profile-skinning" class="anchor"></a>Profile Skinning</h1><pre class="language-ocaml"><code>open OCADml
 open OSCADml</code></pre><p>The <span class="xref-unresolved"><code>Mesh.skin</code></span> function makes it (relatively) simple to generate meshes that cover over series of profiles. A greate simple example demonstrated by the skin modules in both <a href="https://github.com/openscad/list-comprehension-demos">list-comprehension-demos</a> and <a href="https://github.com/revarbat/BOSL2/wiki/skin.scad">BOSL2</a> is the vaccum connector.</p><pre class="language-ocaml"><code>let profiles =
   let fn = 32
   and up h = Path3.translate (v3 0. 0. h) in
@@ -15,13 +15,13 @@ open OSCADml</code></pre><p>The <span class="xref-unresolved"><code>Mesh.skin</c
   in
   List.mapi show profiles |&gt; Scad.union |&gt; Scad.to_file &quot;vaccum_connector_points.scad&quot;</code></pre>
 <p style="text-align:center;">
-<img src="../assets/vaccum_connector_points.png" style="width:150mm;"/>
+<img src="_assets/vaccum_connector_points.png" style="width:150mm;"/>
 </p> <pre class="language-ocaml"><code>let () =
   Mesh.skin ~slices:(`Flat 0) profiles
   |&gt; Scad.of_mesh
   |&gt; Scad.to_file &quot;vaccum_connector.scad&quot;</code></pre>
 <p style="text-align:center;">
-<img src="../assets/vaccum_connector.png" style="width:150mm;"/>
+<img src="_assets/vaccum_connector.png" style="width:150mm;"/>
 </p> <pre class="language-ocaml"><code>let () =
   Mesh.skin
     ~refine:2

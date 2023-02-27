@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"><head><title>morphing_sweeps (OSCADml.morphing_sweeps)</title><link rel="stylesheet" href="../odoc.css"/><meta charset="utf-8"/><meta name="generator" content="odoc 2.2.0"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><script src="../highlight.pack.js"></script><script>hljs.initHighlightingOnLoad();</script></head><body class="odoc"><nav class="odoc-nav"><a href="index.html">Up</a> – <a href="index.html">OSCADml</a> &#x00BB; morphing_sweeps</nav><header class="odoc-preamble"><h1 id="morphing-sweeps"><a href="#morphing-sweeps" class="anchor"></a>Morphing Sweeps</h1><pre class="language-ocaml"><code>open OCADml
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>morphing_sweeps (OSCADml.morphing_sweeps)</title><link rel="stylesheet" href="../_odoc_support/odoc.css"/><meta charset="utf-8"/><meta name="generator" content="odoc 2.2.0"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><script src="../_odoc_support/highlight.pack.js"></script><script>hljs.initHighlightingOnLoad();</script></head><body class="odoc"><nav class="odoc-nav"><a href="index.html">Up</a> – <a href="index.html">OSCADml</a> &#x00BB; morphing_sweeps</nav><header class="odoc-preamble"><h1 id="morphing-sweeps"><a href="#morphing-sweeps" class="anchor"></a>Morphing Sweeps</h1><pre class="language-ocaml"><code>open OCADml
 open OSCADml</code></pre><p>While <span class="xref-unresolved"><code>Mesh.sweep</code></span> and it's derived functions are useful for sweeping fixed polygons with holes, as shown in the <a href="rounded_polyhole_sweep.html">rounded sweeps demo</a>, the <span class="xref-unresolved"><code>Mesh.morphing_sweep</code></span> family provides a means to do so with different shapes at the beginning and end.</p><pre class="language-ocaml"><code>let () =
   let path =
     let control =
@@ -8,15 +8,14 @@ open OSCADml</code></pre><p>While <span class="xref-unresolved"><code>Mesh.sweep
     in
     Bezier3.curve ~fn:60 @@ Bezier3.of_path ~size:(`Flat (`Rel 0.3)) control
   and caps =
-    Mesh.Cap.(
-      capped ~bot:(round @@ circ (`Radius 0.5)) ~top:(round @@ circ (`Radius 0.5)))
+    Mesh.Cap.(capped ~bot:(round @@ circ (`Radius 0.5)) ~top:(round @@ circ (`Radius 0.5)))
   and a = Poly2.ring ~fn:5 ~thickness:(v2 2.5 2.5) (v2 6. 6.)
   and b = Poly2.ring ~fn:80 ~thickness:(v2 2. 2.) (v2 4. 4.) in
   Mesh.path_morph ~refine:2 ~caps ~path ~outer_map:`Tangent a b
   |&gt; Scad.of_mesh
   |&gt; Scad.to_file &quot;tangent_morph_sweep.scad&quot;</code></pre>
 <p style="text-align:center;">
-<img src="../assets/tangent_morph_sweep.png" style="width:150mm;"/>
+<img src="_assets/tangent_morph_sweep.png" style="width:150mm;"/>
 </p> <p>Similar to the <code>?scale_ez</code> and <code>?twist_ez</code> parameters on <span class="xref-unresolved"><code>Path3.to_transforms</code></span> and those that make use of it, such as <span class="xref-unresolved"><code>Mesh.morph</code></span>, the morphing sweep functions in the <span class="xref-unresolved"><code>Mesh</code></span> module expose <code>?ez</code>, which offers the same style of bezier easing (see <span class="xref-unresolved"><code>Easing</code></span>) for morphs.</p><pre class="language-ocaml"><code>let scad =
   let top =
     Mesh.morph
@@ -31,5 +30,5 @@ open OSCADml</code></pre><p>While <span class="xref-unresolved"><code>Mesh.sweep
   in
   Scad.(add (ztrans 2. top) (ztrans (-2.) @@ xrot Float.pi top))</code></pre><p>As the generated mesh contains quite a large number of points due to the large number of slices and the resolution of the inner ring (and the duplication) of the shape (megabytes), we'll take advantage of the <code>include</code> trick provided by the optional <code>?incl</code> parameter to <a href="OSCADml/Scad/index.html#val-to_file"><code>Scad.to_file</code></a>. This will produce a pair of <code>.scad</code> scripts, one named <code>&quot;incl_eased_morph.scad&quot;</code>, and another named <code>&quot;eased_morph.scad&quot;</code> that simply includes it. By loading the later into OpenSCAD rather than the former, we can avoid the sluggishness that can result when the editor attempts to handle large files.</p><pre class="language-ocaml"><code>let () = Scad.to_file ~incl:true &quot;eased_morph.scad&quot; scad</code></pre>
 <p style="text-align:center;">
-<img src="../assets/eased_morph.png" style="width:150mm;"/>
+<img src="_assets/eased_morph.png" style="width:150mm;"/>
 </p> </header><div class="odoc-content"></div></body></html>
