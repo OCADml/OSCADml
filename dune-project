@@ -36,6 +36,6 @@
   (cairo2
    (and
     (>= 0.6.2)
-    :with-doc))
+    (or :with-doc :with-test)))
   (OCADml
    (>= 0.4.0))))
