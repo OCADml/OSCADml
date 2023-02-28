@@ -34,8 +34,6 @@
   (gg
    (>= 1.0.0))
   (cairo2
-   (and
-    (>= 0.6.2)
-    (or :with-doc :with-test)))
+   (>= 0.6.2))
   (OCADml
    (>= 0.4.0))))
