@@ -1,3 +1,7 @@
+## v0.2.2
+
+- adapt to OCADml Mesh breaking change (polygonal -> triangular)
+
 ## v0.2.1
 
 - make odoc manual compatible with odig

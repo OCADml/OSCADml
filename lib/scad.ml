@@ -345,7 +345,10 @@ let of_poly2 ?convexity poly =
     in
     polygon ?convexity ~paths:(List.rev paths) (List.rev points)
 
-let of_mesh ?convexity m = polyhedron ?convexity (Mesh.points m) (Mesh.faces m)
+let of_mesh ?convexity m =
+  let faces = List.map (fun (a, b, c) -> [ a; b; c ]) (Mesh.faces m) in
+  polyhedron ?convexity (Mesh.points m) faces
+
 let[@inline] of_poly3 ?convexity t = of_mesh ?convexity @@ Mesh.of_poly3 t
 
 let to_string t =
@@ -425,7 +428,7 @@ let to_string t =
         indent
         (Buffer.contents @@ buf_of_list buf_add_vec2 points)
         ( Option.map (fun ps -> Buffer.contents @@ buf_of_list buf_add_idxs ps) paths
-        |> maybe_fmt ", paths=%s" )
+          |> maybe_fmt ", paths=%s" )
         convexity
     | Text { text; size; font; halign; valign; spacing; direction; language; script; fn }
       ->
