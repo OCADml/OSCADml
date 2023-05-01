@@ -85,6 +85,7 @@ should serve as a helpful reference.
 
 {2 Skins and Morphs}
 - {{!page-"profile_skinning"} {b Profile skinning}}
+- {{!page-"spline_skinning"} {b Continuous skinning with Bézier splines}}
 - {{!page-"morphing_sweeps"} {b Morphing sweeps and extrusions}}
 
 {2 Function Plotting}

@@ -47,12 +47,3 @@ let () =
     <img src="_assets/vaccum_connector.png" style="width:150mm;"/>
     </p> %}
     *)
-
-let () =
-  Mesh.skin
-    ~refine:2
-    ~slices:(`Flat 25)
-    ~mapping:(`Flat `Tangent)
-    Path3.[ circle ~fn:5 4.; translate (v3 0. 0. 3.) @@ circle ~fn:80 2. ]
-  |> Scad.of_mesh
-  |> Scad.to_file "tangent_skin_test.scad"
