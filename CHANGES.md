@@ -1,3 +1,9 @@
+## v0.2.3
+
+- bump OCADml dependency to v0.6.0
+- add `Mesh.skline` example page
+- minor cleanup of old examples with newer convenience functions
+
 ## v0.2.2
 
 - adapt to OCADml Mesh breaking change (polygonal -> triangular)
