@@ -18,7 +18,7 @@ let () =
       V3.[ v 0. 0. 2.; v 0. 20. 20.; v 40. 20. 10.; v 30. 0. 10. ]
       |> Path3.quaternion (Quaternion.make (v3 1. 1. 0.) (Float.pi /. -5.))
     in
-    Bezier3.curve ~fn:60 @@ Bezier3.of_path ~size:(`Flat (`Rel 0.3)) control
+    Bezier3.curve ~fn:80 @@ Bezier3.of_path ~size:(`Flat (`Rel 0.3)) control
   and caps =
     Mesh.Cap.(capped ~bot:(round @@ circ (`Radius 0.5)) ~top:(round @@ circ (`Radius 0.5)))
   and a = Poly2.ring ~fn:5 ~thickness:(v2 2.5 2.5) (v2 6. 6.)

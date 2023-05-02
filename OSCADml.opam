@@ -9,7 +9,7 @@ authors: [
   "Masaki Nakano<namachan10777@gmail.com>"
 ]
 license: "GPL-2.0-or-later"
-tags: ["OCADml" "CAD" "OpenSCAD"]
+tags: ["OCADml" "CAD" "OpenSCAD" "CSG"]
 homepage: "https://github.com/OCADml/OSCADml"
 doc: "https://ocadml.github.io/OSCADml"
 bug-reports: "https://github.com/OCADml/OSCADml/issues"
@@ -18,7 +18,7 @@ depends: [
   "ocaml" {>= "4.14.0"}
   "gg" {>= "1.0.0"}
   "cairo2" {>= "0.6.2"}
-  "OCADml" {>= "0.5.0"}
+  "OCADml" {>= "0.6.0"}
   "odoc" {with-doc}
 ]
 build: [

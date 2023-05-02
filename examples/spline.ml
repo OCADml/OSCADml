@@ -6,7 +6,7 @@ open OSCADml
 (** Control points that our
     {{:https://mathworld.wolfram.com/CubicSpline.html}cubic spline} will pass
     through. *)
-let control = [ v2 0. 10.; v2 10. 40.; v2 20. 40.; v2 30. (-20.); v2 40. (-40.) ]
+let control = V2.[ v 0. 10.; v 10. 40.; v 20. 40.; v 30. (-20.); v 40. (-40.) ]
 
 (** Mark our [control] points with the debugging helper
     {{!OSCADml.Debug.show_path2} [Debug.show_path2]} for reference. We don't
@@ -25,7 +25,7 @@ let line =
   Scad.of_mesh @@ Mesh.path_extrude ~path rectangle
 
 (** Union our control point [marks] and [line] sweep shapes and output to file. *)
-let () = Scad.to_file "spline.scad" (Scad.union [ line; marks ])
+let () = Scad.to_file "spline.scad" (Scad.add line marks)
 
 (** {%html:
     <p style="text-align:center;">

@@ -27,7 +27,7 @@
  (description
   "OSCADml is an OCaml front-end to the OpenSCAD CAD programming language.")
  (tags
-  ("OCADml" "CAD" "OpenSCAD"))
+  ("OCADml" "CAD" "OpenSCAD" "CSG"))
  (depends
   (ocaml
    (>= 4.14.0))
@@ -36,4 +36,4 @@
   (cairo2
    (>= 0.6.2))
   (OCADml
-   (>= 0.5.0))))
+   (>= 0.6.0))))

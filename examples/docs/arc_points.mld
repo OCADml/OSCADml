@@ -42,9 +42,7 @@ let () =
   in
   let wedge = Scad.extrude ~height:1. @@ Scad.of_path2 arc
   and marks =
-    Debug.show_path2 show arc
-    |> Scad.translate (v3 0. 0. 1.1)
-    |> Scad.color ~alpha:0.8 Color.Magenta
+    Scad.color ~alpha:0.8 Color.Magenta @@ Scad.ztrans 1.1 (Debug.show_path2 show arc)
   in
   Scad.to_file "arc_wedge_2d.scad" @@ Scad.union [ wedge; marks ]
 ]}

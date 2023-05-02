@@ -15,6 +15,7 @@
   resampled_path
   default_vs_euler_sweeps
   profile_skinning
+  spline_skinning
   morphing_sweeps)
  (libraries OSCADml OCADml.PolyText))
 
