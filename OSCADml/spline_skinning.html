@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>spline_skinning (OSCADml.spline_skinning)</title><link rel="stylesheet" href="../_odoc_support/odoc.css"/><meta charset="utf-8"/><meta name="generator" content="odoc 2.2.0"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><script src="../_odoc_support/highlight.pack.js"></script><script>hljs.initHighlightingOnLoad();</script></head><body class="odoc"><nav class="odoc-nav"><a href="index.html">Up</a> – <a href="index.html">OSCADml</a> &#x00BB; spline_skinning</nav><header class="odoc-preamble"><h1 id="bézier-sklines"><a href="#bézier-sklines" class="anchor"></a>Bézier Sklines</h1><pre class="language-ocaml"><code>open OCADml
+open OSCADml</code></pre><p><span class="xref-unresolved"><code>Mesh.skline</code></span>, like <span class="xref-unresolved"><code>Mesh.skin</code></span> provides a means of generating a mesh that covers a series of given profiles, but where <code>skin</code> linearly transistions between each profile independently, <code>skline</code> splines through each of the paths formed by the associated vertices from the first profile to the last (or in a loop). to generate meshes that cover over series of profiles. However, unlike <code>skin</code> only resampling is made available for mapping vertices between incomensurate profiles as the point duplication methods (tangent and distance) can easily lead to edge intersections.</p><pre class="language-ocaml"><code>let handle_profiles =
+  let circ = Path3.circle ~fn:64 5. in
+  let base = Path3.scale (v3 1.2 1.2 1.) circ
+  and handle = Path3.scale (v3 0.7 0.7 1.) circ in
+  Path3.
+    [ ztrans (-3.) base
+    ; circ
+    ; translate (v3 15. 0. 20.) (yrot (Float.pi /. 2.) handle)
+    ; xtrans 30. (yrot Float.pi circ)
+    ; translate (v3 30. 0. (-3.)) (yrot Float.pi base)
+    ]</code></pre><p>A quick look at the points of our profiles we are about to spline over with alternating colours may help a bit to conceptualize what we are about to give <span class="xref-unresolved"><code>Mesh.skline</code></span> to work with.</p><pre class="language-ocaml"><code>let () =
+  let show i =
+    let c = if i mod 2 = 0 then Color.Magenta else Color.Aquamarine in
+    Debug.show_path3 (fun _ -&gt; Scad.(color c @@ sphere 0.2))
+  in
+  List.mapi show handle_profiles |&gt; Scad.union |&gt; Scad.to_file &quot;handle_points.scad&quot;</code></pre>
+<p style="text-align:center;">
+<img src="_assets/handle_points.png" style="width:150mm;"/>
+</p> <p>Using the <code>?tangents</code> parameter of <span class="xref-unresolved"><code>Bezier3.of_path</code></span> we can specify the tangents we want for each profile, rather than leaving them up to the automatically computed derivatives (that may differ for each edge path tracing between the profiles). Here we contstrain them to cardinals so we can get a handle that sticks closer to right angles.</p><pre class="language-ocaml"><code>let () =
+  let up = v3 0. 0. 1. in
+  let tangents = `Tangents [ up; up; v3 1. 0. 0.; V3.neg up; V3.neg up ] in
+  Mesh.skline ~fn:200 ~size:(`Flat (`Rel 0.5)) ~tangents handle_profiles
+  |&gt; Scad.of_mesh
+  |&gt; Scad.to_file ~incl:true &quot;handle_skline.scad&quot;</code></pre>
+<p style="text-align:center;">
+<img src="_assets/handle_skline.png" style="width:150mm;"/>
+</p> <p>As mentioned above, continuous curvature loops are also possible. Here we morph cyclically through circular and pentagonal profiles by specifying <code>~endcaps:`Loop</code>.</p><pre class="language-ocaml"><code>let () =
+  let circ = Path3.circle ~fn:64 5. in
+  let pent = Path3.(circle ~fn:5 5.) in
+  let profs =
+    Path3.
+      [ circ
+      ; translate (v3 15. 0. 20.) (yrot (Float.pi /. 2.) pent)
+      ; xtrans 30. (yrot Float.pi circ)
+      ; translate (v3 15. 0. (-20.)) (yrot (Float.pi *. 1.5) pent)
+      ]
+  in
+  Mesh.skline ~endcaps:`Loop ~fn:200 ~size:(`Flat (`Rel 0.1)) profs
+  |&gt; Scad.of_mesh
+  |&gt; Scad.to_file ~incl:true &quot;edgy_loop.scad&quot;</code></pre>
+<p style="text-align:center;">
+<img src="_assets/edgy_loop.png" style="width:150mm;"/>
+</p> </header><div class="odoc-content"></div></body></html>

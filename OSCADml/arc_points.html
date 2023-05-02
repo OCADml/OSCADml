@@ -16,9 +16,7 @@ open OSCADml</code></pre><p>A numbered marker function for <a href="OSCADml/Debu
   in
   let wedge = Scad.extrude ~height:1. @@ Scad.of_path2 arc
   and marks =
-    Debug.show_path2 show arc
-    |&gt; Scad.translate (v3 0. 0. 1.1)
-    |&gt; Scad.color ~alpha:0.8 Color.Magenta
+    Scad.color ~alpha:0.8 Color.Magenta @@ Scad.ztrans 1.1 (Debug.show_path2 show arc)
   in
   Scad.to_file &quot;arc_wedge_2d.scad&quot; @@ Scad.union [ wedge; marks ]</code></pre>
 <p style="text-align:center;">

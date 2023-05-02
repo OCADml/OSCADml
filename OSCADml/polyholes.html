@@ -21,6 +21,6 @@ let () =
       |&gt; Scad.translate (v3 0. 0. (-3.))
       |&gt; Scad.color ~alpha:0.5 Color.BlueViolet
     in
-    Scad.union [ poly; reference ]
+    Scad.add poly reference
   in
   Scad.to_file &quot;polyholes.scad&quot; scad</code></pre></header><div class="odoc-content"></div></body></html>
